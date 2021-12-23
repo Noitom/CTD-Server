@@ -1,4 +1,4 @@
-package com.snf.dsds.config;
+package com.snf.dsds.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snf.dsds.bean.RespBean;

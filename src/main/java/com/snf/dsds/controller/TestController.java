@@ -1,5 +1,10 @@
 package com.snf.dsds.controller;
 
+import com.snf.dsds.bean.RespBean;
+import com.snf.dsds.bean.User;
+import com.snf.dsds.common.annotation.Decrypt;
+import com.snf.dsds.common.annotation.Encrypt;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
+    @Decrypt
+    @Encrypt
     @RequestMapping("/test")
-    public String test(){
-        return "test success";
+    public RespBean test(@RequestBody User user){
+        return RespBean.ok("请求成功",user);
     }
 
 }
