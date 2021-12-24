@@ -2,8 +2,8 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     username: root
-    password: 123456
-    url: jdbc:mysql://localhost:3306/newdsds?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    password: 123456789
+    url: jdbc:mysql://192.168.1.102:3306/ctd?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.snf.dsds.dao

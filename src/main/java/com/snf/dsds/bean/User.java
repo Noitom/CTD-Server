@@ -15,31 +15,21 @@ import java.util.Date;
 public class User implements Serializable {
     private static final long serialVersionUID = 38042216738788112L;
 
-    /*主键*/
+    /**用户　ID，系统唯一*/
     private Integer id;
-    /*登录名*/
+    /**名称*/
     private String username;
-    /*登录密码(使用BCryptPasswordEncoder加密，因此password字符长度必须大于60)*/
+    /**加密后密码（AES 加密）*/
     private String password;
-    /*真实用户名*/
-    private String realname;
-    /*性别*/
-    private String sex;
-    /*部门ID*/
-    private Integer deptId;
-    /*负责工作*/
-    private String majorWork;
-    /*政治面貌*/
-    private String political;
-    /*职称*/
-    private String technicalTitle;
-    /*电子邮箱*/
-    private String email;
-    /*电话(手机)*/
-    private String mobilePhone;
-    /*创建人*/
-    private Integer crtUser;
-    /*创建时间*/
-    private Date crtDate;
+    /**角色类型*/
+    private Integer role;
+    /**性别*/
+    private Integer sex;
+    /**职业或职称*/
+    private String title;
+    /**系统头像 ID*/
+    private Integer icon;
+    /**注册时间*/
+    private Integer reg;
 
 }

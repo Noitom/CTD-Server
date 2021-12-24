@@ -1,5 +1,6 @@
 package com.snf.dsds.filter;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +41,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             } catch (IOException e) {
                 log.error("获取登录json数据出现错误");
             }
+            log.info("获取到的请求参数为【{}】",JSON.toJSONString(loginData));
             String username = loginData.get(getUsernameParameter());
             String password = loginData.get(getPasswordParameter());
             if (username == null) {

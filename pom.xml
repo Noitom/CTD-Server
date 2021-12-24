@@ -8,6 +8,7 @@
         <version>2.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    <packaging>war</packaging>
     <groupId>com.snf</groupId>
     <artifactId>dsds</artifactId>
     <version>0.0.1-SNAPSHOT</version>
