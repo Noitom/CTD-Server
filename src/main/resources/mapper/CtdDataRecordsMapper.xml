@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.snf.dsds.dao.CtdDataRecordsDao">
+    <insert id="batchInsert">
+        INSERT INTO `t_ctd_data_records` (
+            `data_set_sn`,
+            `voyage_number`,
+            `ship_name`,
+            `platform_type`,
+            `platform_name`,
+            `station_num`,
+            `start_time`,
+            `finish_time`,
+            `dive_num`,
+            `longitude_layout`,
+            `latitude_layout`,
+            `depth_layout`,
+            `longitude_work`,
+            `latitude_work`,
+            `depth_work`,
+            `dev_model`,
+            `dev_sn`,
+            `data_format`,
+            `data_status`,
+            `data_file_name`
+        )
+        VALUES
+            <foreach collection="list"   separator="," item="item">
+                (
+                #{item.dataSetSn,jdbcType=VARCHAR},
+                #{item.voyageNumber,jdbcType=VARCHAR},
+                #{item.shipName,jdbcType=VARCHAR},
+                #{item.platformType,jdbcType=BIGINT},
+                #{item.platformName,jdbcType=VARCHAR},
+                #{item.stationNum,jdbcType=VARCHAR},
+                #{item.startTime,jdbcType=BIGINT},
+                #{item.finishTime,jdbcType=BIGINT},
+                #{item.diveNum,jdbcType=VARCHAR},
+                #{item.longitudeLayout,jdbcType=BIGINT},
+                #{item.latitudeLayout,jdbcType=BIGINT},
+                #{item.depthLayout,jdbcType=BIGINT},
+                #{item.longitudeWork,jdbcType=BIGINT},
+                #{item.latitudeWork,jdbcType=BIGINT},
+                #{item.depthWork,jdbcType=BIGINT},
+                #{item.devModel,jdbcType=VARCHAR},
+                #{item.devSn,jdbcType=VARCHAR},
+                #{item.dataFormat,jdbcType=VARCHAR},
+                #{item.dataStatus,jdbcType=BIGINT},
+                #{item.dataFileName,jdbcType=VARCHAR}
+                )
+            </foreach>
+    </insert>
+</mapper>
