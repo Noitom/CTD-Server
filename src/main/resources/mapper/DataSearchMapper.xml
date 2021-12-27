@@ -19,5 +19,9 @@
       from t_search_parameter t1 left join t_search_type t2 on t1.search_type = t2.id
     </select>
 
+    <select id="querySearchParamBySearchType" resultType="com.snf.dsds.bean.SearchParameter">
+      select * from t_search_parameter where search_type = #{searchType}
+    </select>
+
 
 </mapper>

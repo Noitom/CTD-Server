@@ -5,8 +5,7 @@ import com.snf.dsds.bean.RespBean;
 import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.common.utils.ExcelUtils;
 import com.snf.dsds.service.ICtdDataRecordsService;
-import com.snf.dsds.service.IDataStatusService;
-import com.snf.dsds.service.IPlatformTypeService;
+import com.snf.dsds.service.IDataSearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -32,13 +31,13 @@ import java.util.*;
 public class DataUploadController {
 
     @Autowired
-    IPlatformTypeService platformTypeService;
-
-    @Autowired
-    IDataStatusService dataStatusService;
-
-    @Autowired
     ICtdDataRecordsService ctdDataRecordsService;
+
+    @Autowired
+    IDataSearchService dataSearchService;
+
+    private static final Integer SEARCH_TYPE_1 = 1;//设备类型
+    private static final Integer SEARCH_TYPE_4 = 4;//处理状态
 
     @PostMapping("/uploadFile")
     public RespBean uploadFile(@RequestParam("file") MultipartFile multipartFile){
@@ -81,9 +80,9 @@ public class DataUploadController {
     private List<CtdDataRecord> dataToCtdDataRecordList(List<List<Object>> dataList){
         List<CtdDataRecord> ctdDataRecordList = new ArrayList<>();
         //从数据库获取平台类型
-        Map<String,Long> platforyTypeMap = platformTypeService.getPlatformTypeMap();
+        Map<String,Long> platforyTypeMap = dataSearchService.getDataMap(SEARCH_TYPE_1);
         //从数据库获取处理状态
-        Map<String,Long> dataStatusMap =dataStatusService.getDataStatusMap();
+        Map<String,Long> dataStatusMap =dataSearchService.getDataMap(SEARCH_TYPE_4);
         //记录错误行map
         Map<Integer,String> errRowColMap = new LinkedHashMap<>();
         for(int i =0;i<dataList.size();i++){
@@ -142,7 +141,6 @@ public class DataUploadController {
             message+="数据错误，请检查或联系管理员！";
             throw new CtdException(message);
         }
-
         return ctdDataRecordList;
     }
 

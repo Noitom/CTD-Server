@@ -15,9 +15,9 @@ public class SearchParameter implements Serializable {
     private static final long serialVersionUID = 6546422997378046880L;
 
     /**id*/
-    private Integer id;
+    private Long id;
     /**类型*/
-    private Integer searchType;
+    private Long searchType;
     /**名称*/
     private String name;
 }
