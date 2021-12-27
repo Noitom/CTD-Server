@@ -2,6 +2,7 @@ package com.snf.dsds.bean;
 
 import lombok.Data;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @program: dsds
@@ -21,6 +22,10 @@ public class SearchType implements Serializable {
      * 类型名称
      */
     private String name;
+    /**
+     * 子数据
+     */
+    private List<SearchParameter> searchParameters;
 
 
 }

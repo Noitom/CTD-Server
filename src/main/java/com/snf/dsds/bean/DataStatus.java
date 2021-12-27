@@ -18,4 +18,6 @@ public class DataStatus implements Serializable {
     private Long id;
     /**名称*/
     private String status;
+    /***/
+
 }
