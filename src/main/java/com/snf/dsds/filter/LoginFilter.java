@@ -32,6 +32,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             throw new AuthenticationServiceException(
                     "Authentication method not supported: " + request.getMethod());
         }
+        String origin = request.getHeader("Origin");
+        if(StringUtils.isEmpty(origin)){
+            origin = request.getHeader("Referer");
+        }
+        response.setHeader("Access-Control-Allow-Origin", origin);
+        response.setHeader("Access-Control-Allow-Credentials", "true");
         if(StringUtils.equals(request.getContentType(),MediaType.APPLICATION_JSON_VALUE) ||
                 StringUtils.equals(request.getContentType(),MediaType.APPLICATION_JSON_UTF8_VALUE)){
             log.info("开始json数据登录流程");

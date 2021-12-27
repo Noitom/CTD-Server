@@ -20,6 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.PrintWriter;
 
+
 /**
  * @program: dsds
  * @description: security配置类
@@ -61,15 +62,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     PrintWriter out = response.getWriter();
                     RespBean respBean = RespBean.error(exception.getMessage());
                     if (exception instanceof LockedException) {
-                        respBean.setMsg("账户被锁定，请联系管理员!");
+                        respBean.setMessage("账户被锁定，请联系管理员!");
                     } else if (exception instanceof CredentialsExpiredException) {
-                        respBean.setMsg("密码过期，请联系管理员!");
+                        respBean.setMessage("密码过期，请联系管理员!");
                     } else if (exception instanceof AccountExpiredException) {
-                        respBean.setMsg("账户过期，请联系管理员!");
+                        respBean.setMessage("账户过期，请联系管理员!");
                     } else if (exception instanceof DisabledException) {
-                        respBean.setMsg("账户被禁用，请联系管理员!");
+                        respBean.setMessage("账户被禁用，请联系管理员!");
                     } else if (exception instanceof BadCredentialsException) {
-                        respBean.setMsg("用户名或者密码输入错误，请重新输入!");
+                        respBean.setMessage("用户名或者密码输入错误，请重新输入!");
                     }
                     out.write(new ObjectMapper().writeValueAsString(respBean));
                     out.flush();
@@ -84,6 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         log.debug("使用自定义请求拦截配置");
         http.authorizeRequests()
+                .antMatchers("/**").anonymous()
                 .anyRequest().authenticated();
         http.formLogin();
         http.httpBasic();
@@ -110,4 +112,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             }
         };
     }
+
+
 }

@@ -43,13 +43,13 @@ public class EncryptResponse implements ResponseBodyAdvice<RespBean> {
         log.info("对响应数据进行加密");
         byte[] keyBytes = encryptProperties.getKey().getBytes();
         try {
-            if (body.getMsg()!=null) {
-                log.info("响应信息【{}】",body.getMsg());
-                body.setMsg(AESUtils.encrypt(body.getMsg().getBytes(),keyBytes));
+            if (body.getMessage()!=null) {
+                log.info("响应信息【{}】",body.getMessage());
+                body.setMessage(AESUtils.encrypt(body.getMessage().getBytes(),keyBytes));
             }
-            if (body.getObj() != null) {
-                log.info("响应数据",JSON.toJSONString(body.getObj()));
-                body.setObj(AESUtils.encrypt(om.writeValueAsBytes(body.getObj()), keyBytes));
+            if (body.getData() != null) {
+                log.info("响应数据",JSON.toJSONString(body.getData()));
+                body.setData(AESUtils.encrypt(om.writeValueAsBytes(body.getData()), keyBytes));
             }
         } catch (Exception e) {
             e.printStackTrace();

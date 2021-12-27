@@ -7,63 +7,63 @@ package com.snf.dsds.bean;
  * @create: 2021-12-21 14:55
  **/
 public class RespBean {
-    private Integer status;
-    private String msg;
-    private Object obj;
+    private String status;
+    private String message;
+    private Object data;
 
     public static RespBean build() {
         return new RespBean();
     }
 
     public static RespBean ok(String msg) {
-        return new RespBean(200, msg, null);
+        return new RespBean("success", msg, null);
     }
 
     public static RespBean ok(String msg, Object obj) {
-        return new RespBean(200, msg, obj);
+        return new RespBean("success", msg, obj);
     }
 
     public static RespBean error(String msg) {
-        return new RespBean(500, msg, null);
+        return new RespBean("faild", msg, null);
     }
 
     public static RespBean error(String msg, Object obj) {
-        return new RespBean(500, msg, obj);
+        return new RespBean("faild", msg, obj);
     }
 
     private RespBean() {
     }
 
-    private RespBean(Integer status, String msg, Object obj) {
+    private RespBean(String status, String msg, Object obj) {
         this.status = status;
-        this.msg = msg;
-        this.obj = obj;
+        this.message = msg;
+        this.data = obj;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public RespBean setStatus(Integer status) {
+    public RespBean setStatus(String status) {
         this.status = status;
         return this;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-    public RespBean setMsg(String msg) {
-        this.msg = msg;
+    public RespBean setMessage(String msg) {
+        this.message = msg;
         return this;
     }
 
-    public Object getObj() {
-        return obj;
+    public Object getData() {
+        return data;
     }
 
-    public RespBean setObj(Object obj) {
-        this.obj = obj;
+    public RespBean setData(Object obj) {
+        this.data = obj;
         return this;
     }
 
