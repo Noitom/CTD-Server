@@ -85,7 +85,7 @@ public class DataUploadController {
     private List<CtdDataRecord> dataToCtdDataRecordList(List<List<Object>> dataList){
         List<CtdDataRecord> ctdDataRecordList = new ArrayList<>();
         //从数据库获取平台类型,处理状态,设备类型
-        Map<String,Long> searchParamTypeMap = dataSearchService.getDataMap(SEARCH_TYPE_PLATFORM,SEARCH_TYPE_DATASTATUS,SEARCH_TYPE_DEVTYPE);
+        Map<String,Long> searchParamTypeMap = dataSearchService.getStrIdMap(SEARCH_TYPE_PLATFORM,SEARCH_TYPE_DATASTATUS,SEARCH_TYPE_DEVTYPE);
 
         //记录错误行map
         Map<Integer,String> errRowColMap = new LinkedHashMap<>();

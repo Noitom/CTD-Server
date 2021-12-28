@@ -22,14 +22,20 @@ public class CtdDataRecord implements Serializable {
     private String shipName;
     /**平台类型*/
     private Long platformType;
+    /**平台类型名称*/
+    private String platformTypeName;
     /**平台名称*/
     private String platformName;
     /**站位名称*/
     private String stationNum;
     /**开始时间*/
     private Long startTime;
+    /**开始时间字符串*/
+    private String startTimeStr;
     /**结束时间*/
     private Long finishTime;
+    /**结束时间字符串*/
+    private String finishTimeStr;
     /**潜次序号*/
     private String diveNum;
     /**布放经度（向后保存 8 位小数，实际数据 * 100000000）*/
@@ -52,9 +58,13 @@ public class CtdDataRecord implements Serializable {
     private String dataFormat;
     /**处理状态*/
     private Long dataStatus;
+    /**处理状态名称*/
+    private String dataStatusName;
     /**原始数据文件名称*/
     private String dataFileName;
     /**设备类型*/
     private Long devType;
+    /**设备类型名称*/
+    private String devTypeName;
 
 }

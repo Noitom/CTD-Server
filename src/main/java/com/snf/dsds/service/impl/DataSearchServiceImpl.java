@@ -31,12 +31,21 @@ public class DataSearchServiceImpl implements IDataSearchService {
     }
 
     @Override
-    public Map<String, Long> getDataMap(Integer... searchType) {
-
+    public Map<String, Long> getStrIdMap(Integer... searchType) {
         List<SearchParameter> searchParameters = dataSearchDao.querySearchParamBySearchType(searchType);
         Map<String,Long> resultMap = new HashMap<>();
         for(SearchParameter searchParameter:searchParameters){
             resultMap.put(searchParameter.getName(),searchParameter.getId());
+        }
+        return resultMap;
+    }
+
+    @Override
+    public Map<Long,String> getIdStrMap(Integer... searchType) {
+        List<SearchParameter> searchParameters = dataSearchDao.querySearchParamBySearchType(searchType);
+        Map<Long,String> resultMap = new HashMap<>();
+        for(SearchParameter searchParameter:searchParameters){
+            resultMap.put(searchParameter.getId(),searchParameter.getName());
         }
         return resultMap;
     }

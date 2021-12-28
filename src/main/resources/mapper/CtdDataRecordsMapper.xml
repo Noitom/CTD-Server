@@ -99,7 +99,7 @@
             #{dataFormat,jdbcType=VARCHAR},
             #{dataStatus,jdbcType=BIGINT},
             #{dataFileName,jdbcType=VARCHAR},
-            #{item.devType,jdbcType=BIGINT}
+            #{devType,jdbcType=BIGINT}
         )
     </insert>
 
@@ -124,7 +124,8 @@
             t.dev_sn AS 'devSn',
             t.data_format AS 'dataFormat',
             t.data_status AS 'dataStatus',
-            t.data_file_name AS 'dataFileName'
+            t.data_file_name AS 'dataFileName',
+            t.dev_type AS 'devType'
         FROM
             t_ctd_data_records t where
             <if test="searchType != null and searchType ==0">

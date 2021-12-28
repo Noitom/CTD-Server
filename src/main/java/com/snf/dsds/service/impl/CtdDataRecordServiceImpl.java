@@ -23,7 +23,6 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     @Autowired
     CtdDataRecordsDao ctdDataRecordsDao;
 
-
     @Override
     public void addExcelData(List<CtdDataRecord> list) {
         // 将文件保存导本地将数据保存数据到数据库
@@ -36,7 +35,8 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     }
 
     @Override
-    public List<CtdDataRecord> queryListByParam(SearchParameter searchParameter) {
-        return ctdDataRecordsDao.queryListBySearchParameter(searchParameter);
+    public List<CtdDataRecord>  queryListByParam(SearchParameter searchParameter) {
+        List<CtdDataRecord> ctdDataRecordList = ctdDataRecordsDao.queryListBySearchParameter(searchParameter);
+        return ctdDataRecordList;
     }
 }
