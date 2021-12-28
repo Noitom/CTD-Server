@@ -32,4 +32,8 @@ public class User implements Serializable {
     /**注册时间*/
     private Integer reg;
 
+    private Role roleObj;
+
+    private UserIcon userIcon;
+
 }

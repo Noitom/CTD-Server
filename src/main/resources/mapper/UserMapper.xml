@@ -7,4 +7,16 @@
     <select id="findByUsername" resultType="com.snf.dsds.bean.User">
         select * from t_user where username = #{username}
     </select>
+
+    <select id="findUser" resultType="com.snf.dsds.bean.User">
+        select t.*,r.id AS 'roleObj.id',r.role AS 'roleObj.role',r.desc AS 'roleObj.desc',
+          i.id AS 'userIcon.id',i.icon AS 'userIcon.icon'
+        from t_user t left join t_user_role r on t.role = r.id
+        left join t_user_icon i on i.id = t.icon
+        <where>
+            <if test="id != null">
+                t.id = #{id}
+            </if>
+        </where>
+    </select>
 </mapper>

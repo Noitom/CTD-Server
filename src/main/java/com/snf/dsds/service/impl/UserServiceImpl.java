@@ -37,4 +37,9 @@ public class UserServiceImpl implements UserDetailsService {
         //用于添加用户的权限。要把用户权限添加到authorities
         return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(), authorities);
     }
+
+
+    public User getUserInfo(User user){
+        return userDao.findUser(user);
+    }
 }
