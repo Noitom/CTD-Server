@@ -211,4 +211,14 @@
         </set>
         where data_set_sn=#{dataSetSn}
     </update>
+
+    <select id="queryFileExist" resultType="java.lang.Boolean">
+        select t.data_exist from t_ctd_data_records t where t.voyage_number = #{voyageNumber} and t.data_file_name = #{fileName}
+    </select>
+
+    <update id="updateExist">
+        update t_ctd_data_records
+        set data_exist = #{exist}
+        where data_file_name = #{fileName}
+    </update>
 </mapper>

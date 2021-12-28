@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,21 +38,56 @@ public class DataUploadController {
     @Autowired
     IDataSearchService dataSearchService;
 
+    @Value("${ctd.upload.path}")
+    private String uploadPath;
+
     private static final Integer SEARCH_TYPE_PLATFORM = 2;//平台类型
     private static final Integer SEARCH_TYPE_DATASTATUS = 4;//处理状态
     private static final Integer SEARCH_TYPE_DEVTYPE = 1;//设备类型
 
     @PostMapping("/uploadFile")
-    public RespBean uploadFile(@RequestParam("file") MultipartFile multipartFile){
+    public RespBean uploadFile(String voyageNumber,@RequestParam("file") MultipartFile multipartFile){
         log.info("进入上传数据接口");
-        String fileName = multipartFile.getOriginalFilename();
-        String path =  "E:/file/"+fileName;
-        File file = new File(path);
         try{
+            String fileName = multipartFile.getOriginalFilename();
+            String path =  uploadPath + "/test/" ;
+            File dir = new File(path);
+            if(!dir.exists()){
+                dir.mkdir();
+            }
+            File file = new File(path,fileName);
             multipartFile.transferTo(file);
         }catch (Exception e){
-            log.error(e.getMessage());
+            log.error("上传错误，错误原因【{}】",e);
             return RespBean.error("上传失败");
+        }
+        return RespBean.ok("上传成功");
+    }
+
+    @PostMapping("/uploadCtdDataFile")
+    public RespBean uploadCtdDataFile(String voyageNumber,@RequestParam("file") MultipartFile multipartFile){
+        log.info("进入上传数据接口");
+        try{
+            String fileName = multipartFile.getOriginalFilename();
+            //校验指定航次编号对应的数据是否已经上传了该文件，不存在的才支持上传
+            if(ctdDataRecordsService.checkFileExist(voyageNumber,fileName)){
+                throw new CtdException("文件已经上传，请勿重复上传！");
+            }
+            String path =  uploadPath + "/"+voyageNumber;
+            File dir = new File(path);
+            if(!dir.exists()){
+                dir.mkdirs();
+            }
+            File file = new File(path,fileName);
+            multipartFile.transferTo(file);
+            // 更新数据库状态
+            ctdDataRecordsService.setDataExist(fileName,true);
+        }catch (CtdException e){
+            log.error("上传出现错误，原因【{}】",e.getMessage());
+            return RespBean.error(e.getMessage());
+        }catch (Exception e){
+            log.error("上传错误，错误原因【{}】", e);
+            return RespBean.error("上传失败,请联系管理员！");
         }
         return RespBean.ok("上传成功");
     }

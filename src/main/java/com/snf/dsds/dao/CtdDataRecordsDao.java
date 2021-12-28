@@ -21,4 +21,8 @@ public interface CtdDataRecordsDao {
     List<CtdDataRecord> queryListBySearchParameter(SearchParameter searchParameter);
 
     int updateCtdDataRecord(CtdDataRecord ctdDataRecord);
+
+    Boolean queryFileExist(@Param("voyageNumber") String voyageNumber,@Param("fileName") String fileName);
+
+    int updateExist(@Param("fileName")String fileName,@Param("exist") Boolean exist);
 }

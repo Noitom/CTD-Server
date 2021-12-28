@@ -2,6 +2,7 @@ package com.snf.dsds.service.impl;
 
 import com.snf.dsds.bean.CtdDataRecord;
 import com.snf.dsds.bean.SearchParameter;
+import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.dao.CtdDataRecordsDao;
 import com.snf.dsds.service.ICtdDataRecordsService;
 import lombok.extern.slf4j.Slf4j;
@@ -43,5 +44,19 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     @Override
     public void updateCtdDataRecord(CtdDataRecord ctdDataRecord) {
         ctdDataRecordsDao.updateCtdDataRecord(ctdDataRecord);
+    }
+
+    @Override
+    public boolean checkFileExist(String voyageNumber, String fileName) {
+        Boolean flag = ctdDataRecordsDao.queryFileExist(voyageNumber, fileName);
+        if(flag == null){
+            throw new CtdException("数据库没有对应数据，不允许上传！");
+        }
+        return flag;
+    }
+
+    @Override
+    public void setDataExist(String fileName,Boolean exist) {
+        ctdDataRecordsDao.updateExist(fileName,exist);
     }
 }

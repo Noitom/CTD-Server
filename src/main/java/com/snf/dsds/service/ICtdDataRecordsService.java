@@ -17,4 +17,11 @@ public interface ICtdDataRecordsService {
     List<CtdDataRecord> queryListByParam(SearchParameter searchParameter);
 
     void updateCtdDataRecord(CtdDataRecord ctdDataRecord);
+
+    /**
+     * 校验航次编号对应的二进制文件是否已经上传
+     */
+    boolean checkFileExist(String voyageNumber,String fileName);
+
+    void setDataExist(String fileName,Boolean exist);
 }
