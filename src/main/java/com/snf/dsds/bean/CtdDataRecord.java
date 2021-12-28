@@ -66,5 +66,18 @@ public class CtdDataRecord implements Serializable {
     private Long devType;
     /**设备类型名称*/
     private String devTypeName;
+    /**布放经度（向后保存 8 位小数，实际数据 * 100000000）*/
+    private Double longitudeLayoutD;
+    /**布放纬度（向后保存 8 位小数，实际数据 * 100000000）*/
+    private Double latitudeLayoutD;
+    /**布放深度（向后保存 4 位小数，实际数据 * 10000）*/
+    private Double depthLayoutD;
+    /**工作经度（向后保存 8 位小数，实际数据 * 100000000）*/
+    private Double longitudeWorkD;
+    /**工作纬度（向后保存 8 位小数，实际数据 * 100000000）*/
+    private Double latitudeWorkD;
+    /**工作深度（向后保存 4 位小数，实际数据 * 10000）*/
+    private Double depthWorkD;
+
 
 }

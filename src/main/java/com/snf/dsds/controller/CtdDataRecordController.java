@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +68,18 @@ public class CtdDataRecordController {
                 ctdDataRecord.setDataStatusName(searchParamTypeMap.get(ctdDataRecord.getDataStatus()));
                 ctdDataRecord.setStartTimeStr(DateFormatUtils.format(ctdDataRecord.getStartTime()*1000,FORMAT_DATE));
                 ctdDataRecord.setFinishTimeStr(DateFormatUtils.format(ctdDataRecord.getFinishTime()*1000,FORMAT_DATE));
+                Double longitudeLayoutD = new BigDecimal(ctdDataRecord.getLongitudeLayout()).divide(new BigDecimal("100000000")).doubleValue();
+                Double latitudeLayoutD = new BigDecimal(ctdDataRecord.getLongitudeLayout()).divide(new BigDecimal("100000000")).doubleValue();
+                Double depthLayoutD = new BigDecimal(ctdDataRecord.getDepthLayout()).divide(new BigDecimal("10000")).doubleValue();
+                Double longitudeWorkD = new BigDecimal(ctdDataRecord.getLongitudeLayout()).divide(new BigDecimal("100000000")).doubleValue();
+                Double latitudeWorkD = new BigDecimal(ctdDataRecord.getLongitudeLayout()).divide(new BigDecimal("100000000")).doubleValue();
+                Double depthWorkD = new BigDecimal(ctdDataRecord.getDepthWork()).divide(new BigDecimal("10000")).doubleValue();
+                ctdDataRecord.setLongitudeLayoutD(longitudeLayoutD);
+                ctdDataRecord.setLatitudeLayoutD(latitudeLayoutD);
+                ctdDataRecord.setDepthLayoutD(depthLayoutD);
+                ctdDataRecord.setLongitudeWorkD(longitudeWorkD);
+                ctdDataRecord.setLatitudeWorkD(latitudeWorkD);
+                ctdDataRecord.setDepthWorkD(depthWorkD);
             }
             return RespBean.ok("查询成功",ctdDataRecords);
         }catch (Exception e){
