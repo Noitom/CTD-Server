@@ -20,4 +20,6 @@ public class SearchParameter implements Serializable {
     private Long searchType;
     /**名称*/
     private String name;
+    /**额外字段*/
+    private String extra;
 }

@@ -54,5 +54,7 @@ public class CtdDataRecord implements Serializable {
     private Long dataStatus;
     /**原始数据文件名称*/
     private String dataFileName;
+    /**设备类型*/
+    private Long devType;
 
 }

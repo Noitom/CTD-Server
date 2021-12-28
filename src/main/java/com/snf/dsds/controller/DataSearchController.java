@@ -19,7 +19,7 @@ public class DataSearchController {
     @Autowired
     IDataSearchService dataSearchService;
 
-    @RequestMapping(value = "/requestSearchType",method = RequestMethod.GET)
+    @RequestMapping(value = "/requestSearchParameter",method = RequestMethod.GET)
     public RespBean getSearchTypeList(){
         return RespBean.ok("获取查询类型成功",dataSearchService.getSearchTypeList());
     }

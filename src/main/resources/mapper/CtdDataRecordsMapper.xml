@@ -24,7 +24,8 @@
             `dev_sn`,
             `data_format`,
             `data_status`,
-            `data_file_name`
+            `data_file_name`,
+            `dev_type`
         )
         VALUES
             <foreach collection="list"   separator="," item="item">
@@ -48,8 +49,98 @@
                 #{item.devSn,jdbcType=VARCHAR},
                 #{item.dataFormat,jdbcType=VARCHAR},
                 #{item.dataStatus,jdbcType=BIGINT},
-                #{item.dataFileName,jdbcType=VARCHAR}
+                #{item.dataFileName,jdbcType=VARCHAR},
+                #{item.devType,jdbcType=BIGINT}
                 )
             </foreach>
     </insert>
+
+    <insert id="addCtdDataRecord">
+        INSERT INTO `t_ctd_data_records` (
+            `data_set_sn`,
+            `voyage_number`,
+            `ship_name`,
+            `platform_type`,
+            `platform_name`,
+            `station_num`,
+            `start_time`,
+            `finish_time`,
+            `dive_num`,
+            `longitude_layout`,
+            `latitude_layout`,
+            `depth_layout`,
+            `longitude_work`,
+            `latitude_work`,
+            `depth_work`,
+            `dev_model`,
+            `dev_sn`,
+            `data_format`,
+            `data_status`,
+            `data_file_name`,
+            `dev_type`
+        )VALUES (
+            #{dataSetSn,jdbcType=VARCHAR},
+            #{voyageNumber,jdbcType=VARCHAR},
+            #{shipName,jdbcType=VARCHAR},
+            #{platformType,jdbcType=BIGINT},
+            #{platformName,jdbcType=VARCHAR},
+            #{stationNum,jdbcType=VARCHAR},
+            #{startTime,jdbcType=BIGINT},
+            #{finishTime,jdbcType=BIGINT},
+            #{diveNum,jdbcType=VARCHAR},
+            #{longitudeLayout,jdbcType=BIGINT},
+            #{latitudeLayout,jdbcType=BIGINT},
+            #{depthLayout,jdbcType=BIGINT},
+            #{longitudeWork,jdbcType=BIGINT},
+            #{latitudeWork,jdbcType=BIGINT},
+            #{depthWork,jdbcType=BIGINT},
+            #{devModel,jdbcType=VARCHAR},
+            #{devSn,jdbcType=VARCHAR},
+            #{dataFormat,jdbcType=VARCHAR},
+            #{dataStatus,jdbcType=BIGINT},
+            #{dataFileName,jdbcType=VARCHAR},
+            #{item.devType,jdbcType=BIGINT}
+        )
+    </insert>
+
+    <select id="queryListBySearchParameter" resultType="com.snf.dsds.bean.CtdDataRecord">
+        SELECT
+            t.data_set_sn AS 'dataSetSn',
+            t.voyage_number AS 'voyageNumber',
+            t.ship_name AS 'shipName',
+            t.platform_type AS 'platformType',
+            t.platform_name AS 'platformName',
+            t.station_num AS 'stationNum',
+            t.start_time AS 'startTime',
+            t.finish_time AS 'finishTime',
+            t.dive_num AS 'diveNum',
+            t.longitude_layout AS 'longitudeLayout',
+            t.latitude_layout AS 'latitudeLayout',
+            t.depth_layout AS 'depthLayout',
+            t.longitude_work AS 'longitudeWork',
+            t.latitude_work AS 'latitudeWork',
+            t.depth_work AS 'depthWork',
+            t.dev_model AS 'devModel',
+            t.dev_sn AS 'devSn',
+            t.data_format AS 'dataFormat',
+            t.data_status AS 'dataStatus',
+            t.data_file_name AS 'dataFileName'
+        FROM
+            t_ctd_data_records t where
+            <if test="searchType != null and searchType ==0">
+              t.voyage_number = #{name}
+            </if>
+            <if test="searchType != null and searchType ==1">
+              t.dev_type = #{id}
+            </if>
+            <if test="searchType != null and searchType ==2">
+              t.platform_type = #{id}
+            </if>
+            <if test="searchType != null and searchType ==3">
+              t.start_time >= #{name} and t.start_time &lt;= #{extra}
+            </if>
+            <if test="searchType != null and searchType ==4">
+              t.data_status = #{id}
+            </if>
+    </select>
 </mapper>

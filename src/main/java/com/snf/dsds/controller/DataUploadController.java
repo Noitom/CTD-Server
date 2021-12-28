@@ -3,6 +3,7 @@ package com.snf.dsds.controller;
 import com.snf.dsds.bean.CtdDataRecord;
 import com.snf.dsds.bean.RespBean;
 import com.snf.dsds.common.Exception.CtdException;
+import com.snf.dsds.common.projectEnum.ParsExcelEnum;
 import com.snf.dsds.common.utils.ExcelUtils;
 import com.snf.dsds.service.ICtdDataRecordsService;
 import com.snf.dsds.service.IDataSearchService;
@@ -36,8 +37,9 @@ public class DataUploadController {
     @Autowired
     IDataSearchService dataSearchService;
 
-    private static final Integer SEARCH_TYPE_1 = 1;//设备类型
-    private static final Integer SEARCH_TYPE_4 = 4;//处理状态
+    private static final Integer SEARCH_TYPE_PLATFORM = 2;//平台类型
+    private static final Integer SEARCH_TYPE_DATASTATUS = 4;//处理状态
+    private static final Integer SEARCH_TYPE_DEVTYPE = 1;//设备类型
 
     @PostMapping("/uploadFile")
     public RespBean uploadFile(@RequestParam("file") MultipartFile multipartFile){
@@ -67,9 +69,12 @@ public class DataUploadController {
             List<CtdDataRecord> ctdDataRecordList = dataToCtdDataRecordList(dataList);
             //将文件保存到本地并将数据存入数据库
             ctdDataRecordsService.addExcelData(ctdDataRecordList);
-        }catch (Exception e){
+        }catch (CtdException e){
             log.error("上传失败【{}】",e);
             return RespBean.error(e.getMessage());
+        }catch (Exception ex){
+            log.error("出现系统错误，原因【{}】",ex);
+            return RespBean.error("出现系统错误，请联系管理员！");
         }
         return RespBean.ok("上传成功");
     }
@@ -79,58 +84,63 @@ public class DataUploadController {
      */
     private List<CtdDataRecord> dataToCtdDataRecordList(List<List<Object>> dataList){
         List<CtdDataRecord> ctdDataRecordList = new ArrayList<>();
-        //从数据库获取平台类型
-        Map<String,Long> platforyTypeMap = dataSearchService.getDataMap(SEARCH_TYPE_1);
-        //从数据库获取处理状态
-        Map<String,Long> dataStatusMap =dataSearchService.getDataMap(SEARCH_TYPE_4);
+        //从数据库获取平台类型,处理状态,设备类型
+        Map<String,Long> searchParamTypeMap = dataSearchService.getDataMap(SEARCH_TYPE_PLATFORM,SEARCH_TYPE_DATASTATUS,SEARCH_TYPE_DEVTYPE);
+
         //记录错误行map
         Map<Integer,String> errRowColMap = new LinkedHashMap<>();
         for(int i =0;i<dataList.size();i++){
             List rowList = dataList.get(i);
             CtdDataRecord ctdDataRecord = new CtdDataRecord();
-            ctdDataRecord.setVoyageNumber((String) rowList.get(0));
-            ctdDataRecord.setShipName((String) rowList.get(1));
-            Long platformType = platforyTypeMap.get((String) rowList.get(2));
+            ctdDataRecord.setVoyageNumber((String) rowList.get(ParsExcelEnum.VOYAGE_NUMBER.ordinal()));
+            ctdDataRecord.setShipName((String) rowList.get(ParsExcelEnum.SHIP_NAME.ordinal()));
+            Long platformType = searchParamTypeMap.get((String) rowList.get(ParsExcelEnum.PLATFORM_TYPE.ordinal()));
             if (platformType == null){
                 errRowColMap.put(i+1,"平台类型");
             }else{
                 ctdDataRecord.setPlatformType(platformType);
             }
-            ctdDataRecord.setPlatformName((String)rowList.get(3));
-            ctdDataRecord.setStationNum((String)rowList.get(4));
+            ctdDataRecord.setPlatformName((String)rowList.get(ParsExcelEnum.PLATFORM_NAME.ordinal()));
+            ctdDataRecord.setStationNum((String)rowList.get(ParsExcelEnum.STATION_NUM.ordinal()));
             try{
-                Long startTime = HSSFDateUtil.getJavaDate(Double.parseDouble((String)rowList.get(5))).getTime();
+                Long startTime = HSSFDateUtil.getJavaDate(Double.parseDouble((String)rowList.get(ParsExcelEnum.START_TIME.ordinal()))).getTime();
                 ctdDataRecord.setStartTime(startTime/1000);
-                Long finishTime = HSSFDateUtil.getJavaDate(Double.parseDouble((String)rowList.get(6))).getTime();
+                Long finishTime = HSSFDateUtil.getJavaDate(Double.parseDouble((String)rowList.get(ParsExcelEnum.FINISH_TIME.ordinal()))).getTime();
                 ctdDataRecord.setFinishTime(finishTime/1000);
             }catch (Exception e){
                 log.error("获取上传数据中的时间戳出现错误，错误原因【{}】",e.getMessage());
                 errRowColMap.put(i+1,StringUtils.isEmpty(errRowColMap.get(i+1))?"开始时间或结束时间":errRowColMap.get(i+1)+"，开始时间或结束时间");
             }
-            ctdDataRecord.setDiveNum((String)rowList.get(7));
+            ctdDataRecord.setDiveNum((String)rowList.get(ParsExcelEnum.DIVE_NUM.ordinal()));
             //经度、维度和深度要乘以不同的系数
             try{
-                ctdDataRecord.setLongitudeLayout(conversion((String)rowList.get(8),"100000000",1));
-                ctdDataRecord.setLatitudeLayout(conversion((String)rowList.get(9),"100000000",2));
-                ctdDataRecord.setDepthLayout(conversion((String)rowList.get(10),"10000",3));
-                ctdDataRecord.setLongitudeWork(conversion((String)rowList.get(11),"100000000",1));
-                ctdDataRecord.setLatitudeWork(conversion((String)rowList.get(12),"100000000",2));
-                ctdDataRecord.setDepthWork(conversion((String)rowList.get(13),"10000",3));
+                ctdDataRecord.setLongitudeLayout(conversion((String)rowList.get(ParsExcelEnum.LONGITUDE_LAYOUT.ordinal()),"100000000",1));
+                ctdDataRecord.setLatitudeLayout(conversion((String)rowList.get(ParsExcelEnum.LATITUDE_LAYOUT.ordinal()),"100000000",2));
+                ctdDataRecord.setDepthLayout(conversion((String)rowList.get(ParsExcelEnum.DEPTH_LAYOUT.ordinal()),"10000",3));
+                ctdDataRecord.setLongitudeWork(conversion((String)rowList.get(ParsExcelEnum.LONGITUDE_WORK.ordinal()),"100000000",1));
+                ctdDataRecord.setLatitudeWork(conversion((String)rowList.get(ParsExcelEnum.LATITUDE_WORK.ordinal()),"100000000",2));
+                ctdDataRecord.setDepthWork(conversion((String)rowList.get(ParsExcelEnum.DEPTH_WORK.ordinal()),"10000",3));
             }catch (Exception e){
                 log.error("经纬度校验有错误，错误原因【{}】",e);
                 errRowColMap.put(i+1,StringUtils.isEmpty(errRowColMap.get(i+1))?"经纬度数据":errRowColMap.get(i+1)+"，经纬度数据");
             }
-            ctdDataRecord.setDevModel((String)rowList.get(14));
-            ctdDataRecord.setDevSn((String)rowList.get(15));
-            ctdDataRecord.setDataSetSn((String)rowList.get(16));
-            ctdDataRecord.setDataFormat((String)rowList.get(17));
-            Long dataStatus =  dataStatusMap.get((String) rowList.get(18));
+            Long dveType = searchParamTypeMap.get((String) rowList.get(ParsExcelEnum.DEV_TYPE.ordinal()));
+            if (dveType == null){
+                errRowColMap.put(i+1,"设备类型");
+            }else{
+                ctdDataRecord.setDevType(dveType);
+            }
+            ctdDataRecord.setDevModel((String)rowList.get(ParsExcelEnum.DEV_MODEL.ordinal()));
+            ctdDataRecord.setDevSn((String)rowList.get(ParsExcelEnum.DEV_SN.ordinal()));
+            ctdDataRecord.setDataSetSn((String)rowList.get(ParsExcelEnum.DATA_SET_SN.ordinal()));
+            ctdDataRecord.setDataFormat((String)rowList.get(ParsExcelEnum.DATA_FORMAT.ordinal()));
+            Long dataStatus =  searchParamTypeMap.get((String) rowList.get(ParsExcelEnum.DATA_STATUS.ordinal()));
             if(dataStatus == null){
                 errRowColMap.put(i+1,StringUtils.isEmpty(errRowColMap.get(i+1))?"处理状态":errRowColMap.get(i+1)+"，处理状态");
             }else{
                 ctdDataRecord.setDataStatus(dataStatus);
             }
-            ctdDataRecord.setDataFileName((String)rowList.get(19));
+            ctdDataRecord.setDataFileName((String)rowList.get(ParsExcelEnum.DATA_FILE_NAME.ordinal()));
             ctdDataRecordList.add(ctdDataRecord);
         }
         if (!CollectionUtils.isEmpty(errRowColMap)){

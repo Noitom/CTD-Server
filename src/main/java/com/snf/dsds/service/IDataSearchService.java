@@ -9,6 +9,6 @@ public interface IDataSearchService {
 
     List<SearchType> getSearchTypeList();
 
-    Map<String,Long> getDataMap(Integer searchType);
+    Map<String,Long> getDataMap(Integer... searchType);
 
 }

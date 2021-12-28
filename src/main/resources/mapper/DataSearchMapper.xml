@@ -15,12 +15,15 @@
     </resultMap>
 
     <select id="getSearchTypeList" resultMap="searchTypeList">
-      select t1.id as 'param_id',t1.search_type,t1.`name` as 'param_value',t2.id ,t2.name
-      from t_search_parameter t1 left join t_search_type t2 on t1.search_type = t2.id
+      select t1.id ,t1.`name` ,t2.id as 'param_id',t2.name as 'param_value',t2.search_type
+      from t_search_type t1 left join t_search_parameter t2 on t2.search_type = t1.id
     </select>
 
     <select id="querySearchParamBySearchType" resultType="com.snf.dsds.bean.SearchParameter">
-      select * from t_search_parameter where search_type = #{searchType}
+      select * from t_search_parameter where search_type in
+        <foreach collection="searchTypes" item="searchType" open="(" close=")" separator=",">
+            #{searchType}
+        </foreach>
     </select>
 
 
