@@ -32,7 +32,7 @@ public class CtdDataRecordController {
     @Autowired
     IDataSearchService dataSearchService;
 
-    private static final String FORMAT_DATE = "yyyy-MM-dd HH:mm:ss";
+    private static final String FORMAT_DATE = "yyyy-MM-dd";
 
     /**
      * 增加ctd数据
@@ -50,6 +50,11 @@ public class CtdDataRecordController {
         return RespBean.ok("添加成功");
     }
 
+    /**
+     * 查询ctd接口
+     * @param searchParameter
+     * @return
+     */
     @RequestMapping("requestCtdRecords")
     public RespBean requestCtdRecords(@RequestBody SearchParameter searchParameter){
         try{
@@ -69,6 +74,21 @@ public class CtdDataRecordController {
             return RespBean.error("查询出现错误，请联系管理员！");
 
         }
+    }
+
+    /**
+     * 更新ctd接口
+     */
+    @RequestMapping("uploadCtdDataRecords")
+    public RespBean uploadCtdDataRecords(@RequestBody  CtdDataRecord ctdDataRecord){
+        log.info("进入更新ctd数据接口");
+        try{
+            ctdDataRecordsService.updateCtdDataRecord(ctdDataRecord);
+        }catch (Exception e){
+            log.error("更新ctd数据出现错误，原因【{}】",e);
+            return RespBean.error("修改数据出现错误，请联系管理员！");
+        }
+        return RespBean.ok("修改成功");
     }
 
 

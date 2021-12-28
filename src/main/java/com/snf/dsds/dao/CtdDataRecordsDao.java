@@ -19,4 +19,6 @@ public interface CtdDataRecordsDao {
     int addCtdDataRecord(CtdDataRecord ctdDataRecord);
 
     List<CtdDataRecord> queryListBySearchParameter(SearchParameter searchParameter);
+
+    int updateCtdDataRecord(CtdDataRecord ctdDataRecord);
 }

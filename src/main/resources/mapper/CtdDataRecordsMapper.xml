@@ -144,4 +144,71 @@
               t.data_status = #{id}
             </if>
     </select>
+
+    <update id="updateCtdDataRecord">
+        update t_ctd_data_records
+        <set>
+            <if test="voyageNumber !=null and voyageNumber != ''">
+                voyage_number=#{voyageNumber},
+            </if>
+            <if test="shipName !=null and shipName != ''">
+                ship_name=#{shipName},
+            </if>
+            <if test="platformType !=null ">
+                platform_type=#{platformType},
+            </if>
+            <if test="platformName !=null and platformName != ''">
+                platform_name=#{platformName},
+            </if>
+            <if test="stationNum !=null and stationNum != ''">
+                station_num=#{stationNum},
+            </if>
+            <if test="startTime !=null ">
+                start_time=#{startTime},
+            </if>
+            <if test="finishTime !=null ">
+                finish_time=#{finishTime},
+            </if>
+            <if test="diveNum !=null and diveNum != ''">
+                dive_num=#{diveNum},
+            </if>
+            <if test="longitudeLayout !=null ">
+                longitude_layout=#{longitudeLayout},
+            </if>
+            <if test="latitudeLayout !=null ">
+                latitude_layout=#{latitudeLayout},
+            </if>
+            <if test="depthLayout !=null ">
+                depth_layout=#{depthLayout},
+            </if>
+            <if test="longitudeWork !=null ">
+                longitude_work=#{longitudeWork},
+            </if>
+            <if test="latitudeWork !=null ">
+                latitude_work=#{latitudeWork},
+            </if>
+            <if test="depthWork !=null ">
+                depth_work=#{depthWork},
+            </if>
+            <if test="devType !=null ">
+                dev_type = #{devType}
+            </if>
+            <if test="devModel !=null and devModel != ''">
+                dev_model=#{devModel},
+            </if>
+            <if test="devSn !=null and devSn != ''">
+                dev_sn=#{devSn},
+            </if>
+            <if test="dataFormat !=null and dataFormat != ''">
+                data_format=#{dataFormat},
+            </if>
+            <if test="dataStatus !=null ">
+                data_status=#{dataStatus},
+            </if>
+            <if test="dataFileName !=null and dataFileName != '' ">
+                data_file_name=#{dataFileName},
+            </if>
+        </set>
+        where data_set_sn=#{dataSetSn}
+    </update>
 </mapper>

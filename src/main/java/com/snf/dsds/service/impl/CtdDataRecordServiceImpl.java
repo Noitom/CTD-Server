@@ -39,4 +39,9 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         List<CtdDataRecord> ctdDataRecordList = ctdDataRecordsDao.queryListBySearchParameter(searchParameter);
         return ctdDataRecordList;
     }
+
+    @Override
+    public void updateCtdDataRecord(CtdDataRecord ctdDataRecord) {
+        ctdDataRecordsDao.updateCtdDataRecord(ctdDataRecord);
+    }
 }

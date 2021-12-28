@@ -15,4 +15,6 @@ public interface ICtdDataRecordsService {
     void addCtdDataRecord(CtdDataRecord ctdDataRecord);
 
     List<CtdDataRecord> queryListByParam(SearchParameter searchParameter);
+
+    void updateCtdDataRecord(CtdDataRecord ctdDataRecord);
 }
