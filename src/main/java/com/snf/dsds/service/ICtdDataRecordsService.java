@@ -3,6 +3,7 @@ package com.snf.dsds.service;
 import com.snf.dsds.bean.CtdDataRecord;
 import com.snf.dsds.bean.SearchParameter;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 public interface ICtdDataRecordsService {
@@ -10,7 +11,7 @@ public interface ICtdDataRecordsService {
     /**
      * 将上传的excel保存导本地将数据批量导入数据库
      */
-    void addExcelData(List<CtdDataRecord> list);
+    void addExcelData(List<CtdDataRecord> list) throws SQLIntegrityConstraintViolationException;
 
     void addCtdDataRecord(CtdDataRecord ctdDataRecord);
 
@@ -24,4 +25,6 @@ public interface ICtdDataRecordsService {
     boolean checkFileExist(String voyageNumber,String fileName);
 
     void setDataExist(String fileName,Boolean exist);
+
+    void deleteCtdDataRecord(String dataSetSn);
 }

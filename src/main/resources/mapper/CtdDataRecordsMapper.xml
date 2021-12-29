@@ -127,22 +127,25 @@
             t.data_file_name AS 'dataFileName',
             t.dev_type AS 'devType'
         FROM
-            t_ctd_data_records t where
+            t_ctd_data_records t
+        <where>
+            t.del_flag = '0'
             <if test="searchType != null and searchType ==0">
-              t.voyage_number = #{name}
+                and t.voyage_number = #{name}
             </if>
             <if test="searchType != null and searchType ==1">
-              t.dev_type = #{id}
+                and t.dev_type = #{id}
             </if>
             <if test="searchType != null and searchType ==2">
-              t.platform_type = #{id}
+                and t.platform_type = #{id}
             </if>
             <if test="searchType != null and searchType ==3">
-              t.start_time >= #{name} and t.start_time &lt;= #{extra}
+                and t.start_time >= #{name} and t.start_time &lt;= #{extra}
             </if>
             <if test="searchType != null and searchType ==4">
-              t.data_status = #{id}
+                and t.data_status = #{id}
             </if>
+        </where>
     </select>
 
     <update id="updateCtdDataRecord">
@@ -191,7 +194,7 @@
                 depth_work=#{depthWork},
             </if>
             <if test="devType !=null ">
-                dev_type = #{devType}
+                dev_type = #{devType},
             </if>
             <if test="devModel !=null and devModel != ''">
                 dev_model=#{devModel},
@@ -208,12 +211,18 @@
             <if test="dataFileName !=null and dataFileName != '' ">
                 data_file_name=#{dataFileName},
             </if>
+            <if test="delFlag !=null">
+                del_flag=#{delFlag},
+            </if>
         </set>
         where data_set_sn=#{dataSetSn}
     </update>
 
     <select id="queryFileExist" resultType="java.lang.Boolean">
-        select t.data_exist from t_ctd_data_records t where t.voyage_number = #{voyageNumber} and t.data_file_name = #{fileName}
+        select t.data_exist from t_ctd_data_records t
+        where t.voyage_number = #{voyageNumber}
+        and t.data_file_name = #{fileName}
+        and t.del_flag = '0'
     </select>
 
     <update id="updateExist">
@@ -221,4 +230,37 @@
         set data_exist = #{exist}
         where data_file_name = #{fileName}
     </update>
+
+    <update id="delete">
+        update t_ctd_data_records
+        set del_flag = 1
+        where data_set_sn = #{dataSetSn}
+    </update>
+
+    <select id="ctdDataExist" resultType="com.snf.dsds.bean.CtdDataRecord">
+        select
+            t.data_set_sn AS 'dataSetSn',
+            t.voyage_number AS 'voyageNumber',
+            t.ship_name AS 'shipName',
+            t.platform_type AS 'platformType',
+            t.platform_name AS 'platformName',
+            t.station_num AS 'stationNum',
+            t.start_time AS 'startTime',
+            t.finish_time AS 'finishTime',
+            t.dive_num AS 'diveNum',
+            t.longitude_layout AS 'longitudeLayout',
+            t.latitude_layout AS 'latitudeLayout',
+            t.depth_layout AS 'depthLayout',
+            t.longitude_work AS 'longitudeWork',
+            t.latitude_work AS 'latitudeWork',
+            t.depth_work AS 'depthWork',
+            t.dev_model AS 'devModel',
+            t.dev_sn AS 'devSn',
+            t.data_format AS 'dataFormat',
+            t.data_status AS 'dataStatus',
+            t.data_file_name AS 'dataFileName',
+            t.dev_type AS 'devType' ,
+            t.del_flag AS 'delFlag'
+         from t_ctd_data_records t where data_set_sn = #{dataSetSn}
+    </select>
 </mapper>

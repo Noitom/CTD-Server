@@ -4,6 +4,7 @@ import com.snf.dsds.bean.CtdDataRecord;
 import com.snf.dsds.bean.SearchParameter;
 import org.apache.ibatis.annotations.Param;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  **/
 public interface CtdDataRecordsDao {
 
-    int batchInsert(@Param("list") List<CtdDataRecord> list);
+    int batchInsert(@Param("list") List<CtdDataRecord> list) throws SQLIntegrityConstraintViolationException;
 
     int addCtdDataRecord(CtdDataRecord ctdDataRecord);
 
@@ -25,4 +26,8 @@ public interface CtdDataRecordsDao {
     Boolean queryFileExist(@Param("voyageNumber") String voyageNumber,@Param("fileName") String fileName);
 
     int updateExist(@Param("fileName")String fileName,@Param("exist") Boolean exist);
+
+    int delete(String dataSetSn);
+
+    CtdDataRecord ctdDataExist(String dataSetSn);
 }

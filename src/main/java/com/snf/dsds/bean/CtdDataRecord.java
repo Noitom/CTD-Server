@@ -1,5 +1,6 @@
 package com.snf.dsds.bean;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -78,4 +79,14 @@ public class CtdDataRecord implements Serializable {
 //    private Double latitudeWorkD;
 //    /**工作深度（向后保存 4 位小数，实际数据 * 10000）*/
 //    private Double depthWorkD;
+
+    private Boolean delFlag;
+
+    public Boolean getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Boolean delFlag) {
+        this.delFlag = delFlag;
+    }
 }

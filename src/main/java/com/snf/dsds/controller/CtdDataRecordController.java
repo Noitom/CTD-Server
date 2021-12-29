@@ -3,6 +3,7 @@ package com.snf.dsds.controller;
 import com.snf.dsds.bean.CtdDataRecord;
 import com.snf.dsds.bean.RespBean;
 import com.snf.dsds.bean.SearchParameter;
+import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.common.projectEnum.SearchTypeEnum;
 import com.snf.dsds.service.ICtdDataRecordsService;
 import com.snf.dsds.service.IDataSearchService;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +44,9 @@ public class CtdDataRecordController {
         log.info("进入增加ctd数据接口");
         try{
             ctdDataRecordsService.addCtdDataRecord(ctdDataRecord);
+        }catch (CtdException e){
+            log.error("出现业务异常，原因【{}】",e);
+            return RespBean.error(e.getMessage());
         }catch (Exception e){
             log.error("添加ctd数据出现错误，原因【{}】",e);
             return RespBean.error("添加数据出现错误，请联系管理员！");
@@ -102,6 +105,24 @@ public class CtdDataRecordController {
             return RespBean.error("修改数据出现错误，请联系管理员！");
         }
         return RespBean.ok("修改成功");
+    }
+
+    /**
+     * 删除ctd数据
+     */
+    @RequestMapping("deleteCtdDataRecord")
+    public RespBean deleteCtdDataRecord(@RequestBody CtdDataRecord ctdDataRecord){
+        log.info("进入删除ctd数据接口");
+        try{
+            ctdDataRecordsService.deleteCtdDataRecord(ctdDataRecord.getDataSetSn());
+            return RespBean.ok("删除成功");
+        }catch (CtdException e){
+            log.error("出现功能错误，原因【{}】",e);
+            return RespBean.error(e.getMessage());
+        }catch (Exception e){
+            log.error("出现系统错误，原因【{}】",e);
+            return RespBean.error("出现系统错误，请联系管理员！");
+        }
     }
 
 

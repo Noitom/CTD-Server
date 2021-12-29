@@ -6,9 +6,11 @@ import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.dao.CtdDataRecordsDao;
 import com.snf.dsds.service.ICtdDataRecordsService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 /**
@@ -25,14 +27,27 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     CtdDataRecordsDao ctdDataRecordsDao;
 
     @Override
-    public void addExcelData(List<CtdDataRecord> list) {
+    public void addExcelData(List<CtdDataRecord> list) throws SQLIntegrityConstraintViolationException {
         // 将文件保存导本地将数据保存数据到数据库
-        ctdDataRecordsDao.batchInsert(list);
+        if(ctdDataRecordsDao.batchInsert(list) == 0){
+            throw new CtdException("没有添加数据到数据库，请联系管理员！");
+        }
     }
 
     @Override
     public void addCtdDataRecord(CtdDataRecord ctdDataRecord) {
-        ctdDataRecordsDao.addCtdDataRecord(ctdDataRecord);
+        CtdDataRecord oldCtdData = ctdDataRecordsDao.ctdDataExist(ctdDataRecord.getDataSetSn());
+        if(oldCtdData != null && !oldCtdData.getDelFlag()){
+            throw new CtdException("数据已经存在，请勿重复添加！");
+        }
+        if(oldCtdData != null && StringUtils.isNotEmpty(oldCtdData.getDataSetSn()) && oldCtdData.getDelFlag()){
+            ctdDataRecord.setDelFlag(false);
+            ctdDataRecordsDao.updateCtdDataRecord(ctdDataRecord);
+        }else{
+            if(ctdDataRecordsDao.addCtdDataRecord(ctdDataRecord) != 1){
+                throw new CtdException("没有添加数据到数据库，请联系管理员！");
+            }
+        }
     }
 
     @Override
@@ -43,7 +58,9 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
 
     @Override
     public void updateCtdDataRecord(CtdDataRecord ctdDataRecord) {
-        ctdDataRecordsDao.updateCtdDataRecord(ctdDataRecord);
+        if(ctdDataRecordsDao.updateCtdDataRecord(ctdDataRecord)!=1){
+            throw new CtdException("该数据不存在，不能修改！");
+        }
     }
 
     @Override
@@ -59,4 +76,13 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     public void setDataExist(String fileName,Boolean exist) {
         ctdDataRecordsDao.updateExist(fileName,exist);
     }
+
+    @Override
+    public void deleteCtdDataRecord(String dataSetSn) {
+        if(ctdDataRecordsDao.delete(dataSetSn) != 1){
+            throw new CtdException("该数据不存在，不能删除！");
+        }
+    }
+
+
 }
