@@ -8,4 +8,6 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 ctd:
   upload:
-    path: E:/file
+    path: E:/file/upload/
+  download:
+    path: E:/file/download/

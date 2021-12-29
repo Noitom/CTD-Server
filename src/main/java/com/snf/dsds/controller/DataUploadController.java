@@ -8,17 +8,17 @@ import com.snf.dsds.common.utils.ExcelUtils;
 import com.snf.dsds.service.ICtdDataRecordsService;
 import com.snf.dsds.service.IDataSearchService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.math.BigDecimal;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
@@ -41,6 +41,9 @@ public class DataUploadController {
 
     @Value("${ctd.upload.path}")
     private String uploadPath;
+
+    @Value("${ctd.download.path}")
+    private String downloadPath;
 
     private static final Integer SEARCH_TYPE_PLATFORM = 2;//平台类型
     private static final Integer SEARCH_TYPE_DATASTATUS = 4;//处理状态
@@ -211,4 +214,21 @@ public class DataUploadController {
         BigDecimal result = num1.multiply(num2);
         return result.longValue();
     }
+
+
+    @RequestMapping(value = "downloadRecordFile",method = RequestMethod.POST)
+    public void downloadRecordFile(@RequestBody String[] dataSetSns, HttpServletResponse response) {
+        log.info("进入下载ctd数据接口");
+        try{
+            String zipfile = ctdDataRecordsService.queryAndZipData(dataSetSns);
+            InputStream inputStream = new FileInputStream(new File(downloadPath,zipfile));
+            response.setHeader("Content-Disposition","attachment;filename=\"" + zipfile + "\"");
+            IOUtils.copy(inputStream,response.getOutputStream());
+        }catch (Exception e){
+            log.error("下载出现错误，原因【{}】",e);
+        }
+    }
+
+
+
 }

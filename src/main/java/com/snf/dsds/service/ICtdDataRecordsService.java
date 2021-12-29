@@ -3,6 +3,8 @@ package com.snf.dsds.service;
 import com.snf.dsds.bean.CtdDataRecord;
 import com.snf.dsds.bean.SearchParameter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
@@ -27,4 +29,6 @@ public interface ICtdDataRecordsService {
     void setDataExist(String fileName,Boolean exist);
 
     void deleteCtdDataRecord(String dataSetSn);
+
+    String queryAndZipData(String[] dataSetSns) throws IOException;
 }

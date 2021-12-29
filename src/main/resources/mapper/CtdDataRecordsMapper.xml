@@ -263,4 +263,34 @@
             t.del_flag AS 'delFlag'
          from t_ctd_data_records t where data_set_sn = #{dataSetSn}
     </select>
+
+    <select id="queryDataBySns" resultType="com.snf.dsds.bean.CtdDataRecord">
+        select
+            t.data_set_sn AS 'dataSetSn',
+            t.voyage_number AS 'voyageNumber',
+            t.ship_name AS 'shipName',
+            t.platform_type AS 'platformType',
+            t.platform_name AS 'platformName',
+            t.station_num AS 'stationNum',
+            t.start_time AS 'startTime',
+            t.finish_time AS 'finishTime',
+            t.dive_num AS 'diveNum',
+            t.longitude_layout AS 'longitudeLayout',
+            t.latitude_layout AS 'latitudeLayout',
+            t.depth_layout AS 'depthLayout',
+            t.longitude_work AS 'longitudeWork',
+            t.latitude_work AS 'latitudeWork',
+            t.depth_work AS 'depthWork',
+            t.dev_model AS 'devModel',
+            t.dev_sn AS 'devSn',
+            t.data_format AS 'dataFormat',
+            t.data_status AS 'dataStatus',
+            t.data_file_name AS 'dataFileName',
+            t.dev_type AS 'devType' ,
+            t.del_flag AS 'delFlag'
+         from t_ctd_data_records t where del_flag = 0 and data_set_sn in
+          <foreach collection="dataSetSns" separator="," open="(" close=")" item="dataSetSn">
+              #{dataSetSn}
+          </foreach>
+    </select>
 </mapper>
