@@ -233,13 +233,15 @@
 
     <update id="delete">
         update t_ctd_data_records
-        set del_flag = 1
+        set del_flag = 1,
+            data_file_name = substring(rand(),3)
         where data_set_sn = #{dataSetSn}
     </update>
 
     <update id="deletes">
         update t_ctd_data_records
-        set del_flag = 1
+        set del_flag = 1,
+            data_file_name = substring(rand(),3)
         where data_set_sn in
         <foreach collection="dataSetSns" item="dataSetSn" open="(" close=")" separator=",">
             #{dataSetSn}
