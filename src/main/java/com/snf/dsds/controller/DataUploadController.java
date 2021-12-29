@@ -216,7 +216,7 @@ public class DataUploadController {
     }
 
 
-    @RequestMapping(value = "downloadRecordFile",method = RequestMethod.POST)
+    @RequestMapping(value = "downloadRecordFiles",method = RequestMethod.POST)
     public void downloadRecordFile(@RequestBody String[] dataSetSns, HttpServletResponse response) {
         log.info("进入下载ctd数据接口");
         try{

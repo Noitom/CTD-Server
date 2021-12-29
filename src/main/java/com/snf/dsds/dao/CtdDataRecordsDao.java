@@ -29,6 +29,8 @@ public interface CtdDataRecordsDao {
 
     int delete(String dataSetSn);
 
+    int deletes(@Param("dataSetSns") String[] dataSetSns);
+
     CtdDataRecord ctdDataExist(String dataSetSn);
 
     List<CtdDataRecord> queryDataBySns(@Param("dataSetSns") String[] dataSetSns);

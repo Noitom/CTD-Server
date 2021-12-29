@@ -237,6 +237,15 @@
         where data_set_sn = #{dataSetSn}
     </update>
 
+    <update id="deletes">
+        update t_ctd_data_records
+        set del_flag = 1
+        where data_set_sn in
+        <foreach collection="dataSetSns" item="dataSetSn" open="(" close=")" separator=",">
+            #{dataSetSn}
+        </foreach>
+    </update>
+
     <select id="ctdDataExist" resultType="com.snf.dsds.bean.CtdDataRecord">
         select
             t.data_set_sn AS 'dataSetSn',

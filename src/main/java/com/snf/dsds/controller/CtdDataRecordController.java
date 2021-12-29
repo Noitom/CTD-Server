@@ -12,8 +12,10 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +51,9 @@ public class CtdDataRecordController {
             return RespBean.error(e.getMessage());
         }catch (Exception e){
             log.error("添加ctd数据出现错误，原因【{}】",e);
+            if(e.getCause() instanceof SQLIntegrityConstraintViolationException){
+                return RespBean.error("Ctd数据文件名称重复，请检查！");
+            }
             return RespBean.error("添加数据出现错误，请联系管理员！");
         }
         return RespBean.ok("添加成功");
@@ -95,7 +100,7 @@ public class CtdDataRecordController {
     /**
      * 更新ctd接口
      */
-    @RequestMapping("uploadCtdDataRecords")
+    @RequestMapping(value = "uploadCtdDataRecords",method = RequestMethod.POST)
     public RespBean uploadCtdDataRecords(@RequestBody  CtdDataRecord ctdDataRecord){
         log.info("进入更新ctd数据接口");
         try{
@@ -110,11 +115,11 @@ public class CtdDataRecordController {
     /**
      * 删除ctd数据
      */
-    @RequestMapping("deleteCtdDataRecord")
-    public RespBean deleteCtdDataRecord(@RequestBody CtdDataRecord ctdDataRecord){
+    @RequestMapping(value = "deleteCtdDataRecords",method = RequestMethod.POST)
+    public RespBean deleteCtdDataRecord(@RequestBody String[] dataSetSns){
         log.info("进入删除ctd数据接口");
         try{
-            ctdDataRecordsService.deleteCtdDataRecord(ctdDataRecord.getDataSetSn());
+            ctdDataRecordsService.deleteCtdDataRecords(dataSetSns);
             return RespBean.ok("删除成功");
         }catch (CtdException e){
             log.error("出现功能错误，原因【{}】",e);

@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.*;
@@ -103,6 +104,29 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     public void deleteCtdDataRecord(String dataSetSn) {
         if(ctdDataRecordsDao.delete(dataSetSn) != 1){
             throw new CtdException("该数据不存在，不能删除！");
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteCtdDataRecords(String[] dataSetSns) {
+        // 删除数据和文件
+        List<CtdDataRecord> ctdDataRecordList = ctdDataRecordsDao.queryDataBySns(dataSetSns);
+        if(CollectionUtils.isEmpty(ctdDataRecordList)){
+            throw new CtdException("数据不存在，不能删除！");
+        }
+        //先删除数据，在删除文件
+        ctdDataRecordsDao.deletes(dataSetSns);
+        //删除所有的文件
+        String filepath;
+        String filename;
+        for (CtdDataRecord ctdDataRecord:ctdDataRecordList){
+            filepath = uploadPath + ctdDataRecord.getVoyageNumber();
+            filename = ctdDataRecord.getDataFileName();
+            File file = new File(filepath,filename);
+            if(file.exists()){
+                file.delete();
+            }
         }
     }
 

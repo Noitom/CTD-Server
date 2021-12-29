@@ -11,3 +11,6 @@ ctd:
     path: E:/file/upload/
   download:
     path: E:/file/download/
+logging:
+  level:
+    com.snf.dsds: debug
