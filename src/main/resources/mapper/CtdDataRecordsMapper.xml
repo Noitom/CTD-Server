@@ -125,7 +125,8 @@
             t.data_format AS 'dataFormat',
             t.data_status AS 'dataStatus',
             t.data_file_name AS 'dataFileName',
-            t.dev_type AS 'devType'
+            t.dev_type AS 'devType',
+            t.data_exist AS 'dataExist'
         FROM
             t_ctd_data_records t
         <where>

@@ -5,13 +5,9 @@ spring:
     password: 123456789
     url: jdbc:mysql://192.168.1.102:3306/ctd?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
   profiles:
-    active: dev
+    active: prod
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.snf.dsds.dao
 server:
   port: 8081
-  servlet:
-    session:
-      cookie:
-        http-only: false

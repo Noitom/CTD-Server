@@ -54,7 +54,7 @@ public class DataUploadController {
         log.info("进入上传数据接口");
         try{
             String fileName = multipartFile.getOriginalFilename();
-            String path =  uploadPath + "/test/" ;
+            String path =  uploadPath + "/test/";
             File dir = new File(path);
             if(!dir.exists()){
                 dir.mkdir();
@@ -68,7 +68,13 @@ public class DataUploadController {
         return RespBean.ok("上传成功");
     }
 
-    @PostMapping("/uploadCtdDataFile")
+    /**
+     * 上传ctd数据文件
+     * @param voyageNumber
+     * @param multipartFile
+     * @return
+     */
+    @PostMapping("/uploadCtdDataFiles")
     public RespBean uploadCtdDataFile(String voyageNumber,@RequestParam("file") MultipartFile multipartFile){
         log.info("进入上传数据接口");
         try{
@@ -77,7 +83,7 @@ public class DataUploadController {
             if(ctdDataRecordsService.checkFileExist(voyageNumber,fileName)){
                 throw new CtdException("文件已经上传，请勿重复上传！");
             }
-            String path =  uploadPath + "/"+voyageNumber;
+            String path =  uploadPath +voyageNumber;
             File dir = new File(path);
             if(!dir.exists()){
                 dir.mkdirs();
@@ -96,7 +102,12 @@ public class DataUploadController {
         return RespBean.ok("上传成功");
     }
 
-    @PostMapping("/uploadExcel")
+    /**
+     * 上传excel
+     * @param multipartFile
+     * @return
+     */
+    @PostMapping("/uploadCtdDataRecords")
     public RespBean uploadExcel(@RequestParam("file") MultipartFile multipartFile){
         log.info("进入上传excel接口");
         List<List<Object>> dataList ;
@@ -216,6 +227,11 @@ public class DataUploadController {
     }
 
 
+    /**
+     * 下载ctd数据文件
+     * @param dataSetSns
+     * @param response
+     */
     @RequestMapping(value = "downloadRecordFiles",method = RequestMethod.POST)
     public void downloadRecordFile(@RequestBody String[] dataSetSns, HttpServletResponse response) {
         log.info("进入下载ctd数据接口");

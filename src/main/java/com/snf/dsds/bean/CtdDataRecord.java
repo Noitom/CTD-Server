@@ -82,6 +82,8 @@ public class CtdDataRecord implements Serializable {
 
     private Boolean delFlag;
 
+    private Boolean dataExist;
+
     public Boolean getDelFlag() {
         return delFlag;
     }
@@ -89,4 +91,5 @@ public class CtdDataRecord implements Serializable {
     public void setDelFlag(Boolean delFlag) {
         this.delFlag = delFlag;
     }
+
 }

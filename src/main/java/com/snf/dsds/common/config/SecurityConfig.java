@@ -85,7 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         log.debug("使用自定义请求拦截配置");
         http.authorizeRequests()
-                .antMatchers("/**").anonymous()
+                .antMatchers("/**").permitAll()//所以用户可以访问，anonymous()是匿名用户可以访问，登录用户不能访问
                 .anyRequest().authenticated();
         http.formLogin();
         http.httpBasic();

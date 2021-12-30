@@ -100,8 +100,8 @@ public class CtdDataRecordController {
     /**
      * 更新ctd接口
      */
-    @RequestMapping(value = "uploadCtdDataRecords",method = RequestMethod.POST)
-    public RespBean uploadCtdDataRecords(@RequestBody  CtdDataRecord ctdDataRecord){
+    @RequestMapping(value = "updateCtdDataRecord",method = RequestMethod.POST)
+    public RespBean updateCtdDataRecord(@RequestBody  CtdDataRecord ctdDataRecord){
         log.info("进入更新ctd数据接口");
         try{
             ctdDataRecordsService.updateCtdDataRecord(ctdDataRecord);
