@@ -1,6 +1,5 @@
 package com.snf.dsds.bean;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -40,17 +39,17 @@ public class CtdDataRecord implements Serializable {
     /**潜次序号*/
     private String diveNum;
     /**布放经度（向后保存 8 位小数，实际数据 * 100000000）*/
-    private Long longitudeLayout;
+    private Double longitudeLayout;
     /**布放纬度（向后保存 8 位小数，实际数据 * 100000000）*/
-    private Long latitudeLayout;
+    private Double latitudeLayout;
     /**布放深度（向后保存 4 位小数，实际数据 * 10000）*/
-    private Long depthLayout;
+    private Double depthLayout;
     /**工作经度（向后保存 8 位小数，实际数据 * 100000000）*/
-    private Long longitudeWork;
+    private Double longitudeWork;
     /**工作纬度（向后保存 8 位小数，实际数据 * 100000000）*/
-    private Long latitudeWork;
+    private Double latitudeWork;
     /**工作深度（向后保存 4 位小数，实际数据 * 10000）*/
-    private Long depthWork;
+    private Double depthWork;
     /**设备型号*/
     private String devModel;
     /**设备序列号*/
@@ -67,18 +66,6 @@ public class CtdDataRecord implements Serializable {
     private Long devType;
     /**设备类型名称*/
     private String devTypeName;
-//    /**布放经度（向后保存 8 位小数，实际数据 * 100000000）*/
-//    private Double longitudeLayoutD;
-//    /**布放纬度（向后保存 8 位小数，实际数据 * 100000000）*/
-//    private Double latitudeLayoutD;
-//    /**布放深度（向后保存 4 位小数，实际数据 * 10000）*/
-//    private Double depthLayoutD;
-//    /**工作经度（向后保存 8 位小数，实际数据 * 100000000）*/
-//    private Double longitudeWorkD;
-//    /**工作纬度（向后保存 8 位小数，实际数据 * 100000000）*/
-//    private Double latitudeWorkD;
-//    /**工作深度（向后保存 4 位小数，实际数据 * 10000）*/
-//    private Double depthWorkD;
 
     private Boolean delFlag;
 

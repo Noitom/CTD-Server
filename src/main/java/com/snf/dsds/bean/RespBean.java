@@ -24,11 +24,11 @@ public class RespBean {
     }
 
     public static RespBean error(String msg) {
-        return new RespBean("faild", msg, null);
+        return new RespBean("fail", msg, null);
     }
 
     public static RespBean error(String msg, Object obj) {
-        return new RespBean("faild", msg, obj);
+        return new RespBean("fail", msg, obj);
     }
 
     private RespBean() {

@@ -1,6 +1,9 @@
 package com.snf.dsds.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.snf.dsds.bean.CtdDataRecord;
 import com.snf.dsds.bean.SearchParameter;
 import com.snf.dsds.common.Exception.CtdException;
@@ -17,9 +20,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.*;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @program: dsds
@@ -45,6 +46,37 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
 
     @Value("${ctd.zip.dataFileName:data.txt}")
     private String dataFileName;
+
+    private  Map<String,String> JSON_CONVERSION_MAP = ImmutableMap.<String, String>builder()
+            .put("dataStatusName","处理状态名称")
+            .put("devTypeName","设备类型名称")
+            .put("startTimeStr","开始时间字符值")
+            .put("finishTimeStr","结束时间字符值")
+            .put("platformTypeName","平台类型名称")
+            .put("dataSetSn","数据集编号")
+            .put("voyageNumber","航次编号")
+            .put("shipName","科考船舶")
+            .put("platformType","平台类型")
+            .put("platformName","平台名称")
+            .put("stationNum","站位名称")
+            .put("startTime","开始时间")
+            .put("finishTime","结束时间")
+            .put("diveNum","潜次序号")
+            .put("longitudeLayout","布放经度")
+            .put("latitudeLayout","布放纬度")
+            .put("depthLayout","布放深度")
+            .put("longitudeWork","工作经度")
+            .put("latitudeWork","工作纬度")
+            .put("depthWork","工作深度")
+            .put("devModel","设备型号")
+            .put("devSn","设备序列号")
+            .put("dataFormat","数据格式")
+            .put("dataStatus","处理状态")
+            .put("dataFileName","原始数据文件名称")
+            .put("devType","设备类型")
+            .put("delFlag","删除标志")
+            .put("dataExist","文件是否存在标志")
+            .build();
 
     @Autowired
     CtdDataRecordsDao ctdDataRecordsDao;
@@ -174,7 +206,10 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         }
         String zipPathFileName = downloadPath + zipFileName;
 
-        String dataStr = JSON.toJSONString(ctdDataRecordList);
+        String dataStr = JSON.toJSONString(ctdDataRecordList,SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue,
+                SerializerFeature.WriteDateUseDateFormat);
+        //todo dataStr中的英文替换成中文
+        dataStr = englishToChinese(dataStr);
         // 将不存在的文件写入error-log.txt
         try(OutputStreamWriter errOp = new OutputStreamWriter(new FileOutputStream(errlogFile));
             OutputStreamWriter dataOp = new OutputStreamWriter(new FileOutputStream(dataFileTxt));
@@ -194,6 +229,19 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         }
         //返回压缩好的文件地址
         return zipFileName;
+    }
+
+    /**
+     * 将返回数据的英文转中文
+     * @param dataStr
+     * @return
+     */
+    private String englishToChinese(String dataStr){
+        String resultStr = dataStr;
+        for(Map.Entry<String,String> entry:JSON_CONVERSION_MAP.entrySet()){
+            resultStr = resultStr.replaceAll(entry.getKey(),entry.getValue());
+        }
+        return resultStr;
     }
 
 

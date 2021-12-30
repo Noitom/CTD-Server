@@ -69,7 +69,7 @@ public class ExcelUtils {
                         errColList.add(j+1);
                     }
                 }
-                if(!CollectionUtils.isEmpty(errColList)){//记录空行
+                if(!CollectionUtils.isEmpty(errColList) && errColList.size() != 21){//记录空行
                     errRolMap.put(i+1,errColList);
                 }
                 list.add(rowList);

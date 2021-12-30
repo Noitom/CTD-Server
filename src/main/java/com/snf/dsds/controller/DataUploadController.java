@@ -168,12 +168,12 @@ public class DataUploadController {
             ctdDataRecord.setDiveNum((String)rowList.get(ParsExcelEnum.DIVE_NUM.ordinal()));
             //经度、维度和深度要乘以不同的系数
             try{
-                ctdDataRecord.setLongitudeLayout(conversion((String)rowList.get(ParsExcelEnum.LONGITUDE_LAYOUT.ordinal()),"100000000",1));
-                ctdDataRecord.setLatitudeLayout(conversion((String)rowList.get(ParsExcelEnum.LATITUDE_LAYOUT.ordinal()),"100000000",2));
-                ctdDataRecord.setDepthLayout(conversion((String)rowList.get(ParsExcelEnum.DEPTH_LAYOUT.ordinal()),"10000",3));
-                ctdDataRecord.setLongitudeWork(conversion((String)rowList.get(ParsExcelEnum.LONGITUDE_WORK.ordinal()),"100000000",1));
-                ctdDataRecord.setLatitudeWork(conversion((String)rowList.get(ParsExcelEnum.LATITUDE_WORK.ordinal()),"100000000",2));
-                ctdDataRecord.setDepthWork(conversion((String)rowList.get(ParsExcelEnum.DEPTH_WORK.ordinal()),"10000",3));
+                ctdDataRecord.setLongitudeLayout(conversion((String)rowList.get(ParsExcelEnum.LONGITUDE_LAYOUT.ordinal()),1));
+                ctdDataRecord.setLatitudeLayout(conversion((String)rowList.get(ParsExcelEnum.LATITUDE_LAYOUT.ordinal()),2));
+                ctdDataRecord.setDepthLayout(conversion((String)rowList.get(ParsExcelEnum.DEPTH_LAYOUT.ordinal()),3));
+                ctdDataRecord.setLongitudeWork(conversion((String)rowList.get(ParsExcelEnum.LONGITUDE_WORK.ordinal()),1));
+                ctdDataRecord.setLatitudeWork(conversion((String)rowList.get(ParsExcelEnum.LATITUDE_WORK.ordinal()),2));
+                ctdDataRecord.setDepthWork(conversion((String)rowList.get(ParsExcelEnum.DEPTH_WORK.ordinal()),3));
             }catch (Exception e){
                 log.error("经纬度校验有错误，错误原因【{}】",e);
                 errRowColMap.put(i+1,StringUtils.isEmpty(errRowColMap.get(i+1))?"经纬度数据":errRowColMap.get(i+1)+"，经纬度数据");
@@ -209,9 +209,9 @@ public class DataUploadController {
     }
 
     /**
-     * 字符串转double*参数转long
+     * 字符串转double并校验经纬度
      */
-    private Long conversion(String str,String param,int flag){
+    private Double conversion(String str,int flag){
         BigDecimal num1 = new BigDecimal(str);
         if (flag ==1 &&
                 (num1.compareTo(new BigDecimal(180)) == 1 || num1.compareTo(new BigDecimal(-180)) == -1 )){
@@ -221,9 +221,7 @@ public class DataUploadController {
                 (num1.compareTo(new BigDecimal(90)) == 1 || num1.compareTo(new BigDecimal(-90)) == -1 )){
             throw new CtdException("导入数据中有维度度数据超出正常范围，请检查！");
         }
-        BigDecimal num2 = new BigDecimal(param);
-        BigDecimal result = num1.multiply(num2);
-        return result.longValue();
+        return num1.doubleValue();
     }
 
 
@@ -236,6 +234,8 @@ public class DataUploadController {
     public void downloadRecordFile(@RequestBody String[] dataSetSns, HttpServletResponse response) {
         log.info("进入下载ctd数据接口");
         try{
+            response.setContentType("application/octet-stream;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
             String zipfile = ctdDataRecordsService.queryAndZipData(dataSetSns);
             InputStream inputStream = new FileInputStream(new File(downloadPath,zipfile));
             response.setHeader("Content-Disposition","attachment;filename=\"" + zipfile + "\"");
