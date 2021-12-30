@@ -1,6 +1,7 @@
 package com.snf.dsds.service.impl;
 
 import com.snf.dsds.bean.User;
+import com.snf.dsds.common.utils.PasswordUtils;
 import com.snf.dsds.dao.UserDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,5 +43,18 @@ public class UserServiceImpl implements UserDetailsService {
 
     public User getUserInfo(User user){
         return userDao.findUser(user);
+    }
+
+    public List<User> getUsers(){
+        return userDao.queryUsers();
+    }
+
+    public void addUser(User user){
+        // 密码进行加密
+        user.setPassword(PasswordUtils.encryptPassword(user.getPassword()));
+        // 生成时间
+        user.setReg(System.currentTimeMillis());
+        // 保存入库
+        userDao.insert(user);
     }
 }

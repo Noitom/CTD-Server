@@ -16,7 +16,7 @@ public class User implements Serializable {
     private static final long serialVersionUID = 38042216738788112L;
 
     /**用户　ID，系统唯一*/
-    private Integer id;
+    private Long id;
     /**名称*/
     private String username;
     /**加密后密码（AES 加密）*/
@@ -30,10 +30,12 @@ public class User implements Serializable {
     /**系统头像 ID*/
     private Integer icon;
     /**注册时间*/
-    private Integer reg;
+    private Long reg;
 
     private Role roleObj;
 
     private UserIcon userIcon;
+
+    private String sexStr;
 
 }

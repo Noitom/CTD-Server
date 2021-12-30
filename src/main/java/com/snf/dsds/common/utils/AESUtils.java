@@ -39,7 +39,7 @@ public class AESUtils {
 
     public static void main(String[] args) throws Exception {
         User user =new User();
-        user.setId(1);
+        user.setId(1L);
         user.setUsername("zyj");
         user.setPassword("123");
         String userJson = JSON.toJSONString(user);
