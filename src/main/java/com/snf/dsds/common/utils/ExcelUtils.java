@@ -60,17 +60,21 @@ public class ExcelUtils {
                 row = sheet.getRow(i);
                 for (int j = 0; j < colLength; j++) {
                     cell = row.getCell(j);
-                    if (cell != null) {
+
+                    if (cell == null || cell.getCellType() == CellType.BLANK.getCode()) {
+                        errColList.add(j+1);
+                    }else {//记录空的列
                         cell.setCellType(Cell.CELL_TYPE_STRING);
                         String data = cell.getStringCellValue();
                         data = data.trim();
                         rowList.add(data);
-                    }else {//记录空的列
-                        errColList.add(j+1);
                     }
                 }
                 if(!CollectionUtils.isEmpty(errColList) && errColList.size() != 21){//记录空行
                     errRolMap.put(i+1,errColList);
+                }
+                if(CollectionUtils.isEmpty(rowList)){
+                    continue;
                 }
                 list.add(rowList);
             }

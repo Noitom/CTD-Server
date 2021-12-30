@@ -208,7 +208,7 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
 
         String dataStr = JSON.toJSONString(ctdDataRecordList,SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue,
                 SerializerFeature.WriteDateUseDateFormat);
-        //todo dataStr中的英文替换成中文
+        //dataStr中的英文替换成中文
         dataStr = englishToChinese(dataStr);
         // 将不存在的文件写入error-log.txt
         try(OutputStreamWriter errOp = new OutputStreamWriter(new FileOutputStream(errlogFile));
