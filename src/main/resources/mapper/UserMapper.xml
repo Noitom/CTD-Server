@@ -10,7 +10,7 @@
 
     <select id="findUser" resultType="com.snf.dsds.bean.User">
         select t.*,r.id AS 'roleObj.id',r.role AS 'roleObj.role',r.desc AS 'roleObj.desc',s.desc AS 'sexStr',
-          i.id AS 'userIcon.id',i.icon AS 'userIcon.icon'
+          i.id AS 'userIcon.id',i.icon AS 'userIcon.icon',r.auth AS 'roleObj.auth'
         from t_user t left join t_user_role r on t.role = r.id
         left join t_user_icon i on i.id = t.icon
         left join t_user_sex s on s.id = t.sex
@@ -24,7 +24,7 @@
 
     <select id="queryUsers" resultType="com.snf.dsds.bean.User">
          select t.*,r.id AS 'roleObj.id',r.role AS 'roleObj.role',r.desc AS 'roleObj.desc',s.desc AS 'sexStr',
-          i.id AS 'userIcon.id',i.icon AS 'userIcon.icon'
+          i.id AS 'userIcon.id',i.icon AS 'userIcon.icon',r.auth AS 'roleObj.auth'
         from t_user t left join t_user_role r on t.role = r.id
         left join t_user_icon i on i.id = t.icon
         left join t_user_sex s on s.id = t.sex

@@ -17,4 +17,5 @@ public class Role implements Serializable {
     private long id;
     private String role;
     private String desc;
+    private Integer auth;
 }
