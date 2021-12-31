@@ -1,5 +1,6 @@
 package com.snf.dsds.service;
 
+import com.snf.dsds.bean.SearchParameter;
 import com.snf.dsds.bean.SearchType;
 
 import java.util.List;
@@ -12,5 +13,11 @@ public interface IDataSearchService {
     Map<String,Long> getStrIdMap(Integer... searchType);
 
     Map<Long,String> getIdStrMap(Integer... searchType);
+
+    void addSearchParameter(SearchParameter searchParameter);
+
+    void deletdSearchParameter(Long id);
+
+    void updateSearchParameter(SearchParameter searchParameter);
 
 }

@@ -1,9 +1,11 @@
 package com.snf.dsds.service.impl;
 
 import com.snf.dsds.bean.User;
+import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.common.utils.PasswordUtils;
 import com.snf.dsds.dao.UserDao;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,9 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @program: dsds
@@ -42,7 +42,11 @@ public class UserServiceImpl implements UserDetailsService {
 
 
     public User getUserInfo(User user){
-        return userDao.findUser(user);
+        User result = userDao.findUser(user);
+        if(result == null ){
+            throw new CtdException("没有查到用户信息");
+        }
+        return result;
     }
 
     public List<User> getUsers(){
@@ -55,6 +59,33 @@ public class UserServiceImpl implements UserDetailsService {
         // 生成时间
         user.setReg(System.currentTimeMillis());
         // 保存入库
-        userDao.insert(user);
+        if(userDao.insert(user) == 0){
+            throw new CtdException("添加失败，请重试！");
+        }
+    }
+
+    public void deleteUser(Long id){
+        if(userDao.delete(id) == 0){
+            throw new CtdException("删除记录不存在，请检查！");
+        }
+    }
+
+    public void updateUser(User user){
+        if(StringUtils.isNotEmpty(user.getPassword())){
+            // 密码进行加密
+            user.setPassword(PasswordUtils.encryptPassword(user.getPassword()));
+        }
+        // 保存入库
+        if(userDao.update(user) == 0){
+            throw new CtdException("修改记录不存在，请检查！");
+        }
+    }
+
+    public Map<String,Object> getUserParameter(){
+        Map<String,Object> result = new HashMap<>();
+        result.put("roles",userDao.queryRoles());
+        result.put("icons",userDao.queryIcons());
+        result.put("sexs",userDao.querySexs());
+        return result;
     }
 }

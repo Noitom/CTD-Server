@@ -2,10 +2,13 @@ package com.snf.dsds.controller;
 
 import com.snf.dsds.bean.RespBean;
 import com.snf.dsds.bean.User;
+import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * @program: dsds
@@ -24,7 +27,11 @@ public class UserController {
     public RespBean requestUserInfo(@RequestBody User user){
         try{
             return RespBean.ok("查询成功",userService.getUserInfo(user));
-        }catch (Exception e){
+        }catch (CtdException e){
+            log.error("没有查到用户信息");
+            return RespBean.error("没有查到用户信息！");
+        }
+        catch (Exception e){
             log.error("获取用户信息出现错误，原因【{}】",e);
             return RespBean.error("出现系统错误，请联系管理员！");
         }
@@ -45,8 +52,46 @@ public class UserController {
         try{
             userService.addUser(user);
             return RespBean.ok("添加成功");
+        }catch (CtdException e){
+            return RespBean.error(e.getMessage());
         }catch (Exception e){
             log.error("添加用户信息出现错误，原因【{}】",e);
+            return RespBean.error("出现系统错误，请联系管理员！");
+        }
+    }
+
+    @PostMapping("deleteUser")
+    public RespBean deleteUser(@RequestBody User user){
+        try{
+            userService.deleteUser(user.getId());
+            return RespBean.ok("删除成功");
+        }catch (CtdException e){
+            return RespBean.error(e.getMessage());
+        }catch (Exception e){
+            log.error("删除用户信息出现错误，原因【{}】",e);
+            return RespBean.error("出现系统错误，请联系管理员！");
+        }
+    }
+
+    @PostMapping("updateUser")
+    public RespBean updateUser(@RequestBody  User user){
+        try{
+            userService.updateUser(user);
+            return RespBean.ok("修改成功");
+        }catch (CtdException e){
+            return RespBean.error(e.getMessage());
+        }catch (Exception e){
+            log.error("修改用户信息出现错误，原因【{}】",e);
+            return RespBean.error("出现系统错误，请联系管理员！");
+        }
+    }
+
+    @GetMapping("getUserParameter")
+    public RespBean getUserParameter(){
+        try{
+            return RespBean.ok("查询成功",userService.getUserParameter());
+        }catch (Exception e){
+            log.error("查询用户参数出现错误，原因【{}】",e);
             return RespBean.error("出现系统错误，请联系管理员！");
         }
     }

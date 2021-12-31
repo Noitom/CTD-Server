@@ -2,6 +2,7 @@ package com.snf.dsds.service.impl;
 
 import com.snf.dsds.bean.SearchParameter;
 import com.snf.dsds.bean.SearchType;
+import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.dao.DataSearchDao;
 import com.snf.dsds.service.IDataSearchService;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,27 @@ public class DataSearchServiceImpl implements IDataSearchService {
             resultMap.put(searchParameter.getId(),searchParameter.getName());
         }
         return resultMap;
+    }
+
+    @Override
+    public void addSearchParameter(SearchParameter searchParameter) {
+        if(dataSearchDao.insertSearchParameter(searchParameter) == 0){
+            throw new CtdException("添加失败,请重试！");
+        }
+    }
+
+    @Override
+    public void deletdSearchParameter(Long id) {
+        if(dataSearchDao.deleteSearchParameter(id) == 0){
+            throw new CtdException("删除记录不存在，请检查！");
+        }
+    }
+
+    @Override
+    public void updateSearchParameter(SearchParameter searchParameter) {
+        if(dataSearchDao.updateSearchParameter(searchParameter) == 0){
+            throw new CtdException("修改记录不存在，请检查！");
+        }
     }
 
 }

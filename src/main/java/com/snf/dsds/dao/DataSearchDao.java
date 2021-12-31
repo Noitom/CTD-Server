@@ -12,5 +12,10 @@ public interface DataSearchDao {
 
     List<SearchParameter> querySearchParamBySearchType(@Param("searchTypes") Integer[] searchTypes);
 
+    int insertSearchParameter(SearchParameter searchParameter);
+
+    int deleteSearchParameter(Long id);
+
+    int updateSearchParameter(SearchParameter searchParameter);
 
 }

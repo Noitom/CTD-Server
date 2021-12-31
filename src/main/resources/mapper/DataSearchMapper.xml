@@ -26,5 +26,30 @@
         </foreach>
     </select>
 
+    <insert id="insertSearchParameter">
+        INSERT INTO `t_search_parameter`(`search_type`, `name`, `del_flag`) VALUES ( #{searchType},#{name},0)
+    </insert>
+
+    <update id="deleteSearchParameter">
+        UPDATE `t_search_parameter`
+        SET
+        `del_flag` = 1
+        WHERE
+            `id` = #{id}
+    </update>
+
+    <update id="updateSearchParameter">
+        UPDATE `t_search_parameter`
+        <set>
+            <if test="searchType != null">
+                `search_type` = #{searchType},
+            </if>
+            <if test="name != null and name != ''">
+                `name` = #{name},
+            </if>
+        </set>
+        WHERE
+            `id` = #{id}
+    </update>
 
 </mapper>

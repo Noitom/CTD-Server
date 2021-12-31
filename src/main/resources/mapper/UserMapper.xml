@@ -36,4 +36,48 @@
             VALUES
                 ( #{username}, #{password}, #{role}, #{sex}, #{title}, #{icon}, #{reg}, 0 )
     </insert>
+
+    <update id="delete">
+        update t_user set del_flag = 1 where id = #{id}
+    </update>
+
+    <update id="update">
+        update t_user
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="role != null ">
+                role = #{role},
+            </if>
+            <if test="sex != null ">
+                sex = #{sex},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="icon != null ">
+                icon = #{icon},
+            </if>
+            <if test="reg != null ">
+                reg = #{reg},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="queryRoles" resultType="com.snf.dsds.bean.Role">
+        select * from t_user_role
+    </select>
+
+    <select id="queryIcons" resultType="com.snf.dsds.bean.UserIcon">
+        select * from t_user_icon
+    </select>
+
+    <select id="querySexs" resultType="java.util.Map">
+        select * from t_user_sex
+    </select>
 </mapper>
