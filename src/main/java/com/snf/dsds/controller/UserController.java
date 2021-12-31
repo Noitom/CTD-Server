@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * @program: dsds
@@ -56,6 +57,9 @@ public class UserController {
             return RespBean.error(e.getMessage());
         }catch (Exception e){
             log.error("添加用户信息出现错误，原因【{}】",e);
+            if(e.getCause() instanceof SQLIntegrityConstraintViolationException){
+                return RespBean.error("用户名重复，请检查！");
+            }
             return RespBean.error("出现系统错误，请联系管理员！");
         }
     }
