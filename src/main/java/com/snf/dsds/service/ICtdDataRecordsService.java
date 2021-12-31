@@ -13,7 +13,7 @@ public interface ICtdDataRecordsService {
     /**
      * 将上传的excel保存导本地将数据批量导入数据库
      */
-    void addExcelData(List<CtdDataRecord> list) throws SQLIntegrityConstraintViolationException;
+    void addExcelData(List<CtdDataRecord> list,List<String> noExistVoyageNums) throws SQLIntegrityConstraintViolationException;
 
     void addCtdDataRecord(CtdDataRecord ctdDataRecord);
 

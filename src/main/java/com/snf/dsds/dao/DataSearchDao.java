@@ -18,4 +18,6 @@ public interface DataSearchDao {
 
     int updateSearchParameter(SearchParameter searchParameter);
 
+    int batchInsertVoyageNums(@Param("noVoyageNums") List<String> noVoyageNums);
+
 }

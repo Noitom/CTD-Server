@@ -9,6 +9,7 @@ import com.snf.dsds.bean.SearchParameter;
 import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.common.utils.ZipUtils;
 import com.snf.dsds.dao.CtdDataRecordsDao;
+import com.snf.dsds.dao.DataSearchDao;
 import com.snf.dsds.service.ICtdDataRecordsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -81,8 +82,16 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     @Autowired
     CtdDataRecordsDao ctdDataRecordsDao;
 
+    @Autowired
+    DataSearchDao dataSearchDao;
+
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void addExcelData(List<CtdDataRecord> list) throws SQLIntegrityConstraintViolationException {
+    public void addExcelData(List<CtdDataRecord> list,List<String> noExistVoyageNums) throws SQLIntegrityConstraintViolationException {
+        if (!CollectionUtils.isEmpty(noExistVoyageNums)){
+            //添加航次编号
+            dataSearchDao.batchInsertVoyageNums(noExistVoyageNums);
+        }
         // 将文件保存导本地将数据保存数据到数据库
         if(ctdDataRecordsDao.batchInsert(list) == 0){
             throw new CtdException("没有添加数据到数据库，请联系管理员！");

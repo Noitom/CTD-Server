@@ -52,4 +52,12 @@
             `id` = #{id}
     </update>
 
+    <insert id="batchInsertVoyageNums">
+        INSERT INTO `t_search_parameter`(`search_type`, `name`, `del_flag`)
+        VALUES
+        <foreach collection="noVoyageNums" separator="," item="noVoyageNum">
+            ( 0,#{noVoyageNum},0)
+        </foreach>
+    </insert>
+
 </mapper>

@@ -86,7 +86,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("getUserParameter")
+    @GetMapping("requestUserParameter")
     public RespBean getUserParameter(){
         try{
             return RespBean.ok("查询成功",userService.getUserParameter());

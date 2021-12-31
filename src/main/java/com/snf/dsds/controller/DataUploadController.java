@@ -4,6 +4,7 @@ import com.snf.dsds.bean.CtdDataRecord;
 import com.snf.dsds.bean.RespBean;
 import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.common.projectEnum.ParsExcelEnum;
+import com.snf.dsds.common.projectEnum.SearchTypeEnum;
 import com.snf.dsds.common.utils.ExcelUtils;
 import com.snf.dsds.service.ICtdDataRecordsService;
 import com.snf.dsds.service.IDataSearchService;
@@ -116,10 +117,11 @@ public class DataUploadController {
             if(CollectionUtils.isEmpty(dataList)){
                 return RespBean.error("上传文件内容为空");
             }
-            // 将数据转换到bean对象中
-            List<CtdDataRecord> ctdDataRecordList = dataToCtdDataRecordList(dataList);
+            // 将数据转换到bean对象中,并将不存在的航次编号保存到列表中
+            List<String> noExistVoyageNums = new ArrayList<>();
+            List<CtdDataRecord> ctdDataRecordList = dataToCtdDataRecordList(dataList,noExistVoyageNums);
             //将文件保存到本地并将数据存入数据库
-            ctdDataRecordsService.addExcelData(ctdDataRecordList);
+            ctdDataRecordsService.addExcelData(ctdDataRecordList,noExistVoyageNums);
         }catch (CtdException e){
             log.error("上传失败【{}】",e);
             return RespBean.error(e.getMessage());
@@ -136,17 +138,24 @@ public class DataUploadController {
     /**
      * 将excel解析数据转换为CtdDataRecord对象，校验格式是否正确
      */
-    private List<CtdDataRecord> dataToCtdDataRecordList(List<List<Object>> dataList){
+    private List<CtdDataRecord> dataToCtdDataRecordList(List<List<Object>> dataList,List<String> noExistVoyageNums){
         List<CtdDataRecord> ctdDataRecordList = new ArrayList<>();
         //从数据库获取平台类型,处理状态,设备类型
-        Map<String,Long> searchParamTypeMap = dataSearchService.getStrIdMap(SEARCH_TYPE_PLATFORM,SEARCH_TYPE_DATASTATUS,SEARCH_TYPE_DEVTYPE);
+        Map<String,Long> searchParamTypeMap = dataSearchService.getStrIdMap(SearchTypeEnum.SEARCH_TYPE_PLATFORM.getValue()
+                ,SearchTypeEnum.SEARCH_TYPE_DATASTATUS.getValue(),SearchTypeEnum.SEARCH_TYPE_DEVTYPE.getValue(),
+                SearchTypeEnum.SEARCH_TYPE_VOYAGENUMBER.getValue());
 
         //记录错误行map
         Map<Integer,String> errRowColMap = new LinkedHashMap<>();
         for(int i =0;i<dataList.size();i++){
             List rowList = dataList.get(i);
             CtdDataRecord ctdDataRecord = new CtdDataRecord();
-            ctdDataRecord.setVoyageNumber((String) rowList.get(ParsExcelEnum.VOYAGE_NUMBER.ordinal()));
+            //TODO 校验航次编号是否存在
+            String voyageNumber = (String) rowList.get(ParsExcelEnum.VOYAGE_NUMBER.ordinal());
+            if (! searchParamTypeMap.containsKey(voyageNumber) ){
+                noExistVoyageNums.add(voyageNumber);
+            }
+            ctdDataRecord.setVoyageNumber(voyageNumber);
             ctdDataRecord.setShipName((String) rowList.get(ParsExcelEnum.SHIP_NAME.ordinal()));
             Long platformType = searchParamTypeMap.get((String) rowList.get(ParsExcelEnum.PLATFORM_TYPE.ordinal()));
             if (platformType == null){

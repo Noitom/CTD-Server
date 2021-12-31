@@ -13,7 +13,9 @@ public enum SearchTypeEnum {
     /**平台类型*/
     SEARCH_TYPE_PLATFORM(2),
     /**处理状态*/
-    SEARCH_TYPE_DATASTATUS(4)
+    SEARCH_TYPE_DATASTATUS(4),
+    /**航次编号*/
+    SEARCH_TYPE_VOYAGENUMBER(0)
     ;
 
 
