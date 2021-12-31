@@ -45,13 +45,13 @@ public class ExcelUtils {
             Sheet sheet = workbook.getSheetAt(0);
             //总行数
             int rowLength = sheet.getLastRowNum()+ 1 ;
-            System.out.println("总行数有多少行"+rowLength);
+            log.debug("总行数有多少行"+rowLength);
             //工作表的列
             Row row = sheet.getRow(0);
 
             //总列数
             int colLength = row.getLastCellNum();
-            System.out.println("总列数有多少列"+colLength);
+            log.debug("总列数有多少列"+colLength);
             //得到指定的单元格
             Cell cell = row.getCell(0);
             for (int i = rowNum - 1; i < rowLength; i++) {
@@ -97,7 +97,7 @@ public class ExcelUtils {
 //        InputStream inputStream = new FileInputStream(new File("E:/test.xls"));
 //        System.out.println(excelToShopIdList(2,inputStream));
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(sdf.format(new Date(1640311345l)));
+        System.out.println(sdf.format(new Date(1640311345L)));
     }
 
     //解析Excel日期格式

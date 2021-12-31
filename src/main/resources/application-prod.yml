@@ -8,3 +8,6 @@ ctd:
     path: /var/ctdServerFile/upload/
   download:
     path: /var/ctdServerFile/download/
+logging:
+  level:
+    com.snf.dsds: info
