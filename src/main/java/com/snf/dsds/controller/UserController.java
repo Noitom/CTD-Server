@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @program: dsds
@@ -51,8 +53,11 @@ public class UserController {
     @PostMapping("addUser")
     public RespBean addUser(@RequestBody  User user){
         try{
-            userService.addUser(user);
-            return RespBean.ok("添加成功");
+            User result = userService.addUser(user);
+            Map<String,Object> resultMap = new HashMap<>();
+            resultMap.put("id",result.getId());
+            resultMap.put("reg",result.getReg());
+            return RespBean.ok("添加成功",resultMap);
         }catch (CtdException e){
             return RespBean.error(e.getMessage());
         }catch (Exception e){

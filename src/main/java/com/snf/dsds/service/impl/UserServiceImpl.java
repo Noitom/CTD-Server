@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserDetailsService {
         return userDao.queryUsers();
     }
 
-    public void addUser(User user){
+    public User addUser(User user){
         // 密码进行加密
         user.setPassword(PasswordUtils.encryptPassword(user.getPassword()));
         // 生成时间
@@ -62,6 +62,7 @@ public class UserServiceImpl implements UserDetailsService {
         if(userDao.insert(user) == 0){
             throw new CtdException("添加失败，请重试！");
         }
+        return user;
     }
 
     public void deleteUser(Long id){

@@ -31,7 +31,7 @@
         where t.del_flag != 1
     </select>
 
-    <insert id="insert" >
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="com.snf.dsds.bean.User">
         INSERT INTO t_user ( username, PASSWORD, role, sex, title, icon, reg, del_flag )
             VALUES
                 ( #{username}, #{password}, #{role}, #{sex}, #{title}, #{icon}, #{reg}, 0 )
