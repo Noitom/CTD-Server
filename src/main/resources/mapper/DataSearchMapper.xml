@@ -26,7 +26,7 @@
         </foreach>
     </select>
 
-    <insert id="insertSearchParameter">
+    <insert id="insertSearchParameter" keyProperty="id" useGeneratedKeys="true" parameterType="com.snf.dsds.bean.SearchParameter">
         INSERT INTO `t_search_parameter`(`search_type`, `name`, `del_flag`) VALUES ( #{searchType},#{name},0)
     </insert>
 

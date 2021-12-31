@@ -14,7 +14,7 @@ public interface IDataSearchService {
 
     Map<Long,String> getIdStrMap(Integer... searchType);
 
-    void addSearchParameter(SearchParameter searchParameter);
+    Long addSearchParameter(SearchParameter searchParameter);
 
     void deletdSearchParameter(Long id);
 

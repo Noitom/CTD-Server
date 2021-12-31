@@ -52,10 +52,11 @@ public class DataSearchServiceImpl implements IDataSearchService {
     }
 
     @Override
-    public void addSearchParameter(SearchParameter searchParameter) {
+    public Long addSearchParameter(SearchParameter searchParameter) {
         if(dataSearchDao.insertSearchParameter(searchParameter) == 0){
             throw new CtdException("添加失败,请重试！");
         }
+        return searchParameter.getId();
     }
 
     @Override

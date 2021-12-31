@@ -29,8 +29,8 @@ public class DataSearchController {
     @PostMapping("addSearchParameter")
     public RespBean addSearchParameter(@RequestBody SearchParameter searchParameter){
         try{
-            dataSearchService.addSearchParameter(searchParameter);
-            return RespBean.ok("添加成功");
+            Long id = dataSearchService.addSearchParameter(searchParameter);
+            return RespBean.ok("添加成功",id);
         }catch (CtdException e){
             return RespBean.error(e.getMessage());
         }
