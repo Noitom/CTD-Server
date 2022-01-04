@@ -37,6 +37,8 @@ public class UserServiceImpl implements UserDetailsService {
         }
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         //用于添加用户的权限。要把用户权限添加到authorities
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(Integer.toString(user.getRoleObj().getAuth()));
+        authorities.add(simpleGrantedAuthority);
         return new org.springframework.security.core.userdetails.User(user.getUsername(),user.getPassword(), authorities);
     }
 

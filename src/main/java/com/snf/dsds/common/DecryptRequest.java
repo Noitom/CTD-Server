@@ -34,13 +34,13 @@ public class DecryptRequest extends RequestBodyAdviceAdapter {
 
     @Override
     public boolean supports(MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
-        log.info("进入请求数据解密前置处理器");
+        log.debug("进入请求数据解密前置处理器");
         return methodParameter.hasMethodAnnotation(Decrypt.class) || methodParameter.hasParameterAnnotation(Decrypt.class);
     }
 
     @Override
     public HttpInputMessage beforeBodyRead(final HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
-        log.info("对请求进行解密");
+        log.debug("对请求进行解密");
         byte[] body = new byte[inputMessage.getBody().available()];
         inputMessage.getBody().read(body);
         try {

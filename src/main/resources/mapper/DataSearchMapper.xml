@@ -16,7 +16,7 @@
 
     <select id="getSearchTypeList" resultMap="searchTypeList">
       select t1.id ,t1.`name` ,t2.id as 'param_id',t2.name as 'param_value',t2.search_type
-      from t_search_type t1 left join t_search_parameter t2 on t2.search_type = t1.id
+      from t_search_type t1 left join t_search_parameter t2 on t2.search_type = t1.id and t2.del_flag !=1
     </select>
 
     <select id="querySearchParamBySearchType" resultType="com.snf.dsds.bean.SearchParameter">
@@ -24,6 +24,7 @@
         <foreach collection="searchTypes" item="searchType" open="(" close=")" separator=",">
             #{searchType}
         </foreach>
+        where del_flag != 1
     </select>
 
     <insert id="insertSearchParameter" keyProperty="id" useGeneratedKeys="true" parameterType="com.snf.dsds.bean.SearchParameter">
@@ -47,6 +48,9 @@
             <if test="name != null and name != ''">
                 `name` = #{name},
             </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag}
+            </if>
         </set>
         WHERE
             `id` = #{id}
@@ -59,5 +63,9 @@
             ( 0,#{noVoyageNum},0)
         </foreach>
     </insert>
+
+    <select id="chenkSearchParamExist" resultType="com.snf.dsds.bean.SearchParameter">
+        select id,search_type AS 'searchType',name,del_flag AS 'delFlag' from t_search_parameter where search_type = #{searchType} and name = #{name}
+    </select>
 
 </mapper>

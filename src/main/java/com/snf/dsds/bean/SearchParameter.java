@@ -22,4 +22,6 @@ public class SearchParameter implements Serializable {
     private String name;
     /**额外字段*/
     private String extra;
+
+    private Boolean delFlag;
 }

@@ -91,9 +91,17 @@ public class CtdDataRecordController {
     public RespBean updateCtdDataRecord(@RequestBody  CtdDataRecord ctdDataRecord){
         log.info("进入更新ctd数据接口");
         try{
+            ctdDataRecord.setDelFlag(null);
             ctdDataRecordsService.updateCtdDataRecord(ctdDataRecord);
-        }catch (Exception e){
+        }catch (CtdException e){
+            log.error("更新ctd数据出现错误,原因【{}】",e);
+            return RespBean.error(e.getMessage());
+        }
+        catch (Exception e){
             log.error("更新ctd数据出现错误，原因【{}】",e);
+            if(e.getCause() instanceof SQLIntegrityConstraintViolationException){
+                return RespBean.error("Ctd数据文件名称重复，请检查！");
+            }
             return RespBean.error("修改数据出现错误，请联系管理员！");
         }
         return RespBean.ok("修改成功");

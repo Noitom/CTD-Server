@@ -122,6 +122,11 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
 
     @Override
     public void updateCtdDataRecord(CtdDataRecord ctdDataRecord) {
+        // 判断文件名是否修改，修改的话吧数据文件标志设置为0
+        CtdDataRecord oleData = ctdDataRecordsDao.ctdDataExist(ctdDataRecord.getDataSetSn());
+        if(!StringUtils.equals(oleData.getDataFileName(),ctdDataRecord.getDataFileName())){
+            ctdDataRecord.setDataExist(false);
+        }
         if(ctdDataRecordsDao.updateCtdDataRecord(ctdDataRecord)!=1){
             throw new CtdException("该数据不存在，不能修改！");
         }

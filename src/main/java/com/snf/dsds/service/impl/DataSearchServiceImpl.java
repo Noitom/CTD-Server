@@ -53,6 +53,17 @@ public class DataSearchServiceImpl implements IDataSearchService {
 
     @Override
     public Long addSearchParameter(SearchParameter searchParameter) {
+        SearchParameter oldSearchParam = dataSearchDao.chenkSearchParamExist(searchParameter);
+        if(oldSearchParam != null && oldSearchParam.getId() != null ){
+            if(oldSearchParam.getDelFlag()){
+                searchParameter.setId(oldSearchParam.getId());
+                searchParameter.setDelFlag(false);
+                dataSearchDao.updateSearchParameter(searchParameter);
+                return searchParameter.getId();
+            }else{
+                throw new CtdException("数据已经存在，请勿重复添加！");
+            }
+        }
         if(dataSearchDao.insertSearchParameter(searchParameter) == 0){
             throw new CtdException("添加失败,请重试！");
         }

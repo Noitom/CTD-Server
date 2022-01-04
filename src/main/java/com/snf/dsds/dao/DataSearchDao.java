@@ -20,4 +20,6 @@ public interface DataSearchDao {
 
     int batchInsertVoyageNums(@Param("noVoyageNums") List<String> noVoyageNums);
 
+    SearchParameter chenkSearchParamExist(SearchParameter searchParameter);
+
 }

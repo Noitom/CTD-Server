@@ -2,6 +2,7 @@ package com.snf.dsds.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snf.dsds.bean.RespBean;
+import com.snf.dsds.common.handler.CtdLogoutSuccessHandler;
 import com.snf.dsds.filter.LoginFilter;
 import com.snf.dsds.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -81,6 +82,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return loginFilter;
     }
 
+    @Bean
+    CtdLogoutSuccessHandler logoutSuccessHandler(){
+        return new CtdLogoutSuccessHandler();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         log.debug("使用自定义请求拦截配置");
@@ -90,6 +96,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin();
         http.httpBasic();
         http.addFilterAt(loginFilter(),UsernamePasswordAuthenticationFilter.class);
+        http.logout().logoutSuccessHandler(logoutSuccessHandler());
         http.cors()         //springsecurity增加跨域配置
                 .and()
                 .csrf().disable();

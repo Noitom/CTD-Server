@@ -5,6 +5,7 @@ import com.snf.dsds.bean.RespBean;
 import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.common.projectEnum.ParsExcelEnum;
 import com.snf.dsds.common.projectEnum.SearchTypeEnum;
+import com.snf.dsds.common.utils.DateUtils;
 import com.snf.dsds.common.utils.ExcelUtils;
 import com.snf.dsds.service.ICtdDataRecordsService;
 import com.snf.dsds.service.IDataSearchService;
@@ -46,9 +47,6 @@ public class DataUploadController {
     @Value("${ctd.download.path}")
     private String downloadPath;
 
-    private static final Integer SEARCH_TYPE_PLATFORM = 2;//平台类型
-    private static final Integer SEARCH_TYPE_DATASTATUS = 4;//处理状态
-    private static final Integer SEARCH_TYPE_DEVTYPE = 1;//设备类型
 
     @PostMapping("/uploadFile")
     public RespBean uploadFile(String voyageNumber,@RequestParam("file") MultipartFile multipartFile){
@@ -113,7 +111,18 @@ public class DataUploadController {
         log.info("进入上传excel接口");
         List<List<Object>> dataList ;
         try{
-            dataList = ExcelUtils.excelToShopIdList(2,multipartFile.getInputStream());
+            String path = uploadPath+"excel/";
+            File dir = new File(path);
+            if(!dir.exists()){
+                dir.mkdirs();
+            }
+            String name = multipartFile.getOriginalFilename();
+            String[] strings = name.split("\\.");
+            String fileName = strings[0]+"-"+ DateUtils.currentFormatDate("yyyyMMddHHmmss")+"."+strings[1];
+            File file = new File(path,fileName);
+            multipartFile.transferTo(file);
+            FileInputStream inputStream = new FileInputStream(file);
+            dataList = ExcelUtils.excelToShopIdList(2,inputStream);
             if(CollectionUtils.isEmpty(dataList)){
                 return RespBean.error("上传文件内容为空");
             }
@@ -150,7 +159,7 @@ public class DataUploadController {
         for(int i =0;i<dataList.size();i++){
             List rowList = dataList.get(i);
             CtdDataRecord ctdDataRecord = new CtdDataRecord();
-            //TODO 校验航次编号是否存在
+            // 校验航次编号是否存在
             String voyageNumber = (String) rowList.get(ParsExcelEnum.VOYAGE_NUMBER.ordinal());
             if (! searchParamTypeMap.containsKey(voyageNumber) ){
                 noExistVoyageNums.add(voyageNumber);

@@ -34,21 +34,21 @@ public class EncryptResponse implements ResponseBodyAdvice<RespBean> {
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
-        log.info("进入响应数据加密前置处理器");
+        log.debug("进入响应数据加密前置处理器");
         return methodParameter.hasMethodAnnotation(Encrypt.class);
     }
 
     @Override
     public RespBean beforeBodyWrite(RespBean body, MethodParameter returnType, MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
-        log.info("对响应数据进行加密");
+        log.debug("对响应数据进行加密");
         byte[] keyBytes = encryptProperties.getKey().getBytes();
         try {
             if (body.getMessage()!=null) {
-                log.info("响应信息【{}】",body.getMessage());
+                log.debug("响应信息【{}】",body.getMessage());
                 body.setMessage(AESUtils.encrypt(body.getMessage().getBytes(),keyBytes));
             }
             if (body.getData() != null) {
-                log.info("响应数据",JSON.toJSONString(body.getData()));
+                log.debug("响应数据",JSON.toJSONString(body.getData()));
                 body.setData(AESUtils.encrypt(om.writeValueAsBytes(body.getData()), keyBytes));
             }
         } catch (Exception e) {
