@@ -24,7 +24,7 @@
         <foreach collection="searchTypes" item="searchType" open="(" close=")" separator=",">
             #{searchType}
         </foreach>
-        where del_flag != 1
+        and del_flag != 1
     </select>
 
     <insert id="insertSearchParameter" keyProperty="id" useGeneratedKeys="true" parameterType="com.snf.dsds.bean.SearchParameter">
