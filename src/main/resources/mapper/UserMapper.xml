@@ -23,6 +23,9 @@
             <if test="id != null">
                 and t.id = #{id}
             </if>
+            <if test="username != null and username != ''">
+                and username = #{username}
+            </if>
             and t.del_flag != 1
         </where>
     </select>
