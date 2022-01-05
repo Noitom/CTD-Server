@@ -6,12 +6,16 @@ import com.google.common.collect.ImmutableMap;
 import com.snf.dsds.bean.CtdDataRecord;
 import com.snf.dsds.bean.SearchParameter;
 import com.snf.dsds.common.Exception.CtdException;
+import com.snf.dsds.common.projectEnum.SearchTypeEnum;
 import com.snf.dsds.common.utils.ZipUtils;
 import com.snf.dsds.dao.CtdDataRecordsDao;
 import com.snf.dsds.dao.DataSearchDao;
 import com.snf.dsds.service.ICtdDataRecordsService;
+import com.snf.dsds.service.IDataSearchService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -47,6 +51,8 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     @Value("${ctd.zip.dataFileName:data.txt}")
     private String dataFileName;
 
+    private static final String FORMAT_DATE = "yyyy-MM-dd";
+
     private  Map<String,String> JSON_CONVERSION_MAP = ImmutableMap.<String, String>builder()
             .put("dataStatusName","处理状态名称")
             .put("devTypeName","设备类型名称")
@@ -75,7 +81,7 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
             .put("dataFileName","原始数据文件名称")
             .put("devType","设备类型")
             .put("delFlag","删除标志")
-            .put("dataExist","文件是否存在标志")
+            .put("dataExist","数据文件存在标志")
             .build();
 
     @Autowired
@@ -83,6 +89,9 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
 
     @Autowired
     DataSearchDao dataSearchDao;
+
+    @Autowired
+    IDataSearchService dataSearchService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -199,11 +208,19 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         List<String> fileNotExistList = new ArrayList<>();
         // 保存要打包的文件
         List<File> needZipFileList = new ArrayList<>();
-        File errlogFile = new File(downloadPath,errlogFileName);
-        File dataFileTxt = new File(downloadPath,dataFileName);
+        String downloadCtdPath = downloadPath+"ctd-data";
+        File downloadCtdDir = new File(downloadCtdPath);
+        if(!downloadCtdDir.exists()){
+            downloadCtdDir.mkdirs();
+        }
+        File errlogFile = new File(downloadCtdPath,errlogFileName);
+        File dataFileTxt = new File(downloadCtdPath,dataFileName);
 
         String dataFilePath;
         String dataFileName;
+        //获取
+        Map<Long,String> searchParamTypeMap = dataSearchService.getIdStrMap(SearchTypeEnum.SEARCH_TYPE_DEVTYPE.getValue(),
+                SearchTypeEnum.SEARCH_TYPE_PLATFORM.getValue(),SearchTypeEnum.SEARCH_TYPE_DATASTATUS.getValue());
         for(CtdDataRecord ctdDataRecord:ctdDataRecordList){
             //将数据存在的数据集编号移除list
             dataNotExistList.remove(ctdDataRecord.getDataSetSn());
@@ -216,6 +233,12 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
                 fileNotExistList.add(ctdDataRecord.getDataSetSn());
                 continue;
             }
+            //设置数据的值
+            ctdDataRecord.setDevTypeName(searchParamTypeMap.get(ctdDataRecord.getDevType()));
+            ctdDataRecord.setPlatformTypeName(searchParamTypeMap.get(ctdDataRecord.getPlatformType()));
+            ctdDataRecord.setDataStatusName(searchParamTypeMap.get(ctdDataRecord.getDataStatus()));
+            ctdDataRecord.setStartTimeStr(DateFormatUtils.format(ctdDataRecord.getStartTime()*1000,FORMAT_DATE));
+            ctdDataRecord.setFinishTimeStr(DateFormatUtils.format(ctdDataRecord.getFinishTime()*1000,FORMAT_DATE));
             //将文件保存起来，方便打zip压缩包
             needZipFileList.add(dataFile);
         }
@@ -239,17 +262,23 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         // 将不存在的文件写入error-log.txt
         try(OutputStreamWriter errOp = new OutputStreamWriter(new FileOutputStream(errlogFile));
             OutputStreamWriter dataOp = new OutputStreamWriter(new FileOutputStream(dataFileTxt));
-            FileOutputStream fos = new FileOutputStream(new File(zipPathFileName));){
+            FileOutputStream fos = new FileOutputStream(new File(zipPathFileName))){
             if(StringUtils.isNotEmpty(errLog)){
                 errOp.write(errLog);
                 errOp.flush();
-                needZipFileList.add(errlogFile);
+            }else{
+                errOp.close();
+                errlogFile.delete();
             }
             dataOp.write(dataStr);
             dataOp.flush();
-            needZipFileList.add(dataFileTxt);
-            // 将数据和文件一起打成zip包到src
-            ZipUtils.toZip(needZipFileList,fos);
+            // 导出数据文件
+            for(File file:needZipFileList){
+                //将文件复制到下载目录下
+                FileUtils.copyFileToDirectory(file,downloadCtdDir);
+            }
+            // 将文件夹打成zip包
+            ZipUtils.toZip(downloadCtdPath,fos,true);
         }catch (Exception e){
             log.error("将数据和文件信息写入文件出错，原因【{}】",e);
         }
@@ -258,7 +287,7 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     }
 
     /**
-     * 将返回数据的英文转中文
+     * 将返回数据的英文转中文,将多余的数据清除
      * @param dataStr
      * @return
      */

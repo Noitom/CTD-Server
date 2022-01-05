@@ -145,14 +145,14 @@ public class ZipUtils {
     //测试方法
     public static void main(String[] args) throws Exception {
         //测试压缩方法1  将磁盘目录打包，并将压缩包写到磁盘
-//        FileOutputStream fos = new FileOutputStream(new File("E:\\file\\zip\\Ts-21-09.zip"));
-//        ZipUtils.toZip("E:\\file\\Ts-21-09", fos, true);
+//        FileOutputStream fos = new FileOutputStream(new File("C:\\file\\upload\\Ts-21-09.zip"));
+//        ZipUtils.toZip("C:\\file\\upload\\Ts-21-07", fos, true);
         /** 测试压缩方法2  */
 
         List<File> fileList = new ArrayList<>();
-        fileList.add(new File("E:\\file\\Ts-21-09\\ctd-ta-001.ctd"));
-        fileList.add(new File("E:\\file\\Ts-21-09\\ctd-ta-001 - 副本.ctd"));
-        FileOutputStream fos2 = new FileOutputStream(new File("E:\\file\\zip\\test.zip"));
+        fileList.add(new File("C:\\file\\upload\\Ts-21-07\\ctd-ta-001.ctd"));
+        fileList.add(new File("C:\\file\\upload\\Ts-21-07\\ctd-ta-001 - 副本.ctd"));
+        FileOutputStream fos2 = new FileOutputStream(new File("C:\\file\\upload\\test.zip"));
         ZipUtils.toZip(fileList, fos2);
 
     }

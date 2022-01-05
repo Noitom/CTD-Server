@@ -299,7 +299,8 @@
             t.data_status AS 'dataStatus',
             t.data_file_name AS 'dataFileName',
             t.dev_type AS 'devType' ,
-            t.del_flag AS 'delFlag'
+            t.del_flag AS 'delFlag',
+            t.data_exist AS 'dataExist'
          from t_ctd_data_records t where del_flag = 0 and data_set_sn in
           <foreach collection="dataSetSns" separator="," open="(" close=")" item="dataSetSn">
               #{dataSetSn}
