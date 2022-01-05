@@ -1,5 +1,6 @@
 package com.snf.dsds.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -66,9 +67,9 @@ public class CtdDataRecord implements Serializable {
     private Long devType;
     /**设备类型名称*/
     private String devTypeName;
-
+    @JsonIgnore
     private Boolean delFlag;
-
+    @JsonIgnore
     private Boolean dataExist;
 
     public Boolean getDelFlag() {
