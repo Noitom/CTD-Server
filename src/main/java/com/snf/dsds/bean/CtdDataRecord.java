@@ -1,6 +1,7 @@
 package com.snf.dsds.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * @create: 2021-12-27 09:54
  **/
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CtdDataRecord implements Serializable {
     private static final long serialVersionUID = 852666822298647109L;
 

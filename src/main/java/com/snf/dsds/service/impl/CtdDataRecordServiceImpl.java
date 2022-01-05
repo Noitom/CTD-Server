@@ -54,11 +54,11 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     private static final String FORMAT_DATE = "yyyy-MM-dd";
 
     private  Map<String,String> JSON_CONVERSION_MAP = ImmutableMap.<String, String>builder()
-            .put("dataStatusName","处理状态名称")
-            .put("devTypeName","设备类型名称")
+            .put("dataStatusName","处理状态")
+            .put("devTypeName","设备类型")
             .put("startTimeStr","开始时间字符值")
             .put("finishTimeStr","结束时间字符值")
-            .put("platformTypeName","平台类型名称")
+            .put("platformTypeName","平台类型")
             .put("dataSetSn","数据集编号")
             .put("voyageNumber","航次编号")
             .put("shipName","科考船舶")
@@ -227,18 +227,21 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
             dataFilePath = uploadPath + ctdDataRecord.getVoyageNumber();
             dataFileName = ctdDataRecord.getDataFileName();
             File dataFile = new File(dataFilePath,dataFileName);
+            //设置数据的值
+            ctdDataRecord.setDevTypeName(searchParamTypeMap.get(ctdDataRecord.getDevType()));
+            ctdDataRecord.setDevType(null);
+            ctdDataRecord.setPlatformTypeName(searchParamTypeMap.get(ctdDataRecord.getPlatformType()));
+            ctdDataRecord.setPlatformType(null);
+            ctdDataRecord.setDataStatusName(searchParamTypeMap.get(ctdDataRecord.getDataStatus()));
+            ctdDataRecord.setDataStatus(null);
+            ctdDataRecord.setStartTimeStr(DateFormatUtils.format(ctdDataRecord.getStartTime()*1000,FORMAT_DATE));
+            ctdDataRecord.setFinishTimeStr(DateFormatUtils.format(ctdDataRecord.getFinishTime()*1000,FORMAT_DATE));
             //校验文件是否存在
             if(!dataFile.exists()){
                 //将文件不存在的数据集编号添加到list
                 fileNotExistList.add(ctdDataRecord.getDataSetSn());
                 continue;
             }
-            //设置数据的值
-            ctdDataRecord.setDevTypeName(searchParamTypeMap.get(ctdDataRecord.getDevType()));
-            ctdDataRecord.setPlatformTypeName(searchParamTypeMap.get(ctdDataRecord.getPlatformType()));
-            ctdDataRecord.setDataStatusName(searchParamTypeMap.get(ctdDataRecord.getDataStatus()));
-            ctdDataRecord.setStartTimeStr(DateFormatUtils.format(ctdDataRecord.getStartTime()*1000,FORMAT_DATE));
-            ctdDataRecord.setFinishTimeStr(DateFormatUtils.format(ctdDataRecord.getFinishTime()*1000,FORMAT_DATE));
             //将文件保存起来，方便打zip压缩包
             needZipFileList.add(dataFile);
         }
