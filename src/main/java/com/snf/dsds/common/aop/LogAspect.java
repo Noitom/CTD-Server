@@ -7,6 +7,8 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -65,7 +67,10 @@ public class LogAspect {
         log.debug("方法最后执行.....");
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
+        // 获取用户信息
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LogBean logBean = new LogBean();
+        logBean.setUsername(authentication.getName());
         logBean.setRequestUrl(request.getRequestURL().toString());
         logBean.setRequestParam(Arrays.toString(jp.getArgs()));
         logDao.addLog(logBean);
