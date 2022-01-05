@@ -7,6 +7,7 @@ import com.snf.dsds.filter.LoginFilter;
 import com.snf.dsds.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
@@ -31,6 +32,9 @@ import java.io.PrintWriter;
 @Slf4j
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Value("${ctd.isprod:false}")
+    private boolean isprod;
 
     @Autowired
     UserServiceImpl userService;
@@ -90,9 +94,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         log.debug("使用自定义请求拦截配置");
-        http.authorizeRequests()
-                .antMatchers("/**").permitAll()//所以用户可以访问，anonymous()是匿名用户可以访问，登录用户不能访问
-                .anyRequest().authenticated();
+        if(isprod){
+            http.authorizeRequests()
+                    .anyRequest().authenticated();
+        }else{
+            http.authorizeRequests()
+                    .antMatchers("/**").permitAll()//所以用户可以访问，anonymous()是匿名用户可以访问，登录用户不能访问
+                    .anyRequest().authenticated();
+        }
         http.formLogin();
         http.httpBasic();
         http.addFilterAt(loginFilter(),UsernamePasswordAuthenticationFilter.class);

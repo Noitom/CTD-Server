@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.snf.dsds.dao.CtdDataRecordsDao">
     <insert id="batchInsert">
-        INSERT INTO `t_ctd_data_records` (
+        REPLACE INTO `t_ctd_data_records` (
             `data_set_sn`,
             `voyage_number`,
             `ship_name`,
@@ -311,6 +311,7 @@
         <foreach collection="list" item="item" open="(" close=")" separator=",">
             #{item.dataSetSn}
         </foreach>
+        and del_flag != 1
     </select>
 
     <select id="checkDataFileExist" resultType="java.lang.String">
@@ -318,5 +319,6 @@
         <foreach collection="list" item="item" open="(" close=")" separator=",">
             #{item.dataFileName}
         </foreach>
+        and del_flag != 1
     </select>
 </mapper>
