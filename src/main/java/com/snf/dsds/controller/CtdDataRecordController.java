@@ -10,10 +10,7 @@ import com.snf.dsds.service.IDataSearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
@@ -41,7 +38,7 @@ public class CtdDataRecordController {
      * 增加ctd数据
      * @return
      */
-    @RequestMapping("addCtdDataRecord")
+    @PostMapping("addCtdDataRecord")
     public RespBean addCtdDataRecord(@RequestBody  CtdDataRecord ctdDataRecord){
         log.info("进入增加ctd数据接口");
         try{
@@ -64,7 +61,7 @@ public class CtdDataRecordController {
      * @param searchParameter
      * @return
      */
-    @RequestMapping("requestCtdRecords")
+    @PostMapping("requestCtdRecords")
     public RespBean requestCtdRecords(@RequestBody SearchParameter searchParameter){
         try{
             List<CtdDataRecord> ctdDataRecords = ctdDataRecordsService.queryListByParam(searchParameter);

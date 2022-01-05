@@ -26,7 +26,7 @@ public class UserController {
     @Autowired
     UserServiceImpl userService;
 
-    @RequestMapping("/requestUserInfo")
+    @PostMapping("/requestUserInfo")
     public RespBean requestUserInfo(@RequestBody User user){
         try{
             return RespBean.ok("查询成功",userService.getUserInfo(user));

@@ -4,6 +4,7 @@ import com.snf.dsds.bean.RespBean;
 import com.snf.dsds.bean.User;
 import com.snf.dsds.common.annotation.Decrypt;
 import com.snf.dsds.common.annotation.Encrypt;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,7 @@ public class TestController {
 
     @Decrypt
     @Encrypt
-    @RequestMapping("/test")
+    @PostMapping("/test")
     public RespBean test(@RequestBody User user){
         return RespBean.ok("请求成功",user);
     }

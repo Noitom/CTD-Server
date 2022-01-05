@@ -71,7 +71,7 @@ public class CtdDataRecord implements Serializable {
     private String devTypeName;
     @JsonIgnore
     private Boolean delFlag;
-    @JsonIgnore
+
     private Boolean dataExist;
 
     public Boolean getDelFlag() {
