@@ -8,9 +8,9 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 ctd:
   upload:
-    path: E:/file/upload/
+    path: C:/file/upload/
   download:
-    path: E:/file/download/
+    path: C:/file/download/
 logging:
   level:
     com.snf.dsds: debug

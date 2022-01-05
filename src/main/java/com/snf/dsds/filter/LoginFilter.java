@@ -1,7 +1,7 @@
 package com.snf.dsds.filter;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
@@ -25,6 +25,7 @@ import java.util.Map;
 @Slf4j
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
+    @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException{
         log.info("进入登录过滤器，处理登录逻辑");
@@ -47,7 +48,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             } catch (IOException e) {
                 log.error("获取登录json数据出现错误");
             }
-            log.info("获取到的请求参数为【{}】",JSON.toJSONString(loginData));
+            log.info("获取到的请求参数为【{}】",new ObjectMapper().writeValueAsString(loginData));
             String username = loginData.get(getUsernameParameter());
             String password = loginData.get(getPasswordParameter());
             if (username == null) {

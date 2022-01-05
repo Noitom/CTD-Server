@@ -1,6 +1,5 @@
 package com.snf.dsds.common;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snf.dsds.bean.RespBean;
 import com.snf.dsds.common.annotation.Encrypt;
@@ -48,7 +47,7 @@ public class EncryptResponse implements ResponseBodyAdvice<RespBean> {
                 body.setMessage(AESUtils.encrypt(body.getMessage().getBytes(),keyBytes));
             }
             if (body.getData() != null) {
-                log.debug("响应数据",JSON.toJSONString(body.getData()));
+                log.debug("响应数据",new ObjectMapper().writeValueAsString(body.getData()));
                 body.setData(AESUtils.encrypt(om.writeValueAsBytes(body.getData()), keyBytes));
             }
         } catch (Exception e) {

@@ -34,4 +34,9 @@ public interface CtdDataRecordsDao {
     CtdDataRecord ctdDataExist(String dataSetSn);
 
     List<CtdDataRecord> queryDataBySns(@Param("dataSetSns") String[] dataSetSns);
+
+    List<String> checkSnExist(List<CtdDataRecord> list);
+
+    List<String> checkDataFileExist(List<CtdDataRecord> list);
+
 }

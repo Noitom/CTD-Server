@@ -1,9 +1,8 @@
 package com.snf.dsds.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.snf.dsds.bean.CtdDataRecord;
 import com.snf.dsds.bean.SearchParameter;
 import com.snf.dsds.common.Exception.CtdException;
@@ -87,7 +86,21 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void addExcelData(List<CtdDataRecord> list,List<String> noExistVoyageNums) throws SQLIntegrityConstraintViolationException {
+    public void addExcelData(List<CtdDataRecord> list,List<String> noExistVoyageNums) throws SQLIntegrityConstraintViolationException, JsonProcessingException {
+        // 校验数据编号是否已经存在
+        List<String> snExistList = ctdDataRecordsDao.checkSnExist(list);
+        String msg;
+        if(!CollectionUtils.isEmpty(snExistList)){
+            msg = "导入数据中，数据编号为"+new ObjectMapper().writeValueAsString(snExistList)+"的数据已经存在，请检查或联系管理员！";
+            msg = msg.replaceAll("\"","'");
+            throw new CtdException(msg);
+        }
+        List<String> dataFileExistList = ctdDataRecordsDao.checkDataFileExist(list);
+        if(!CollectionUtils.isEmpty(dataFileExistList)){
+            msg = "导入数据中，数据文件名称为"+new ObjectMapper().writeValueAsString(dataFileExistList)+"的记录已经存在，请检查或联系管理员！";
+            msg = msg.replaceAll("\"","'");
+            throw new CtdException(msg);
+        }
         if (!CollectionUtils.isEmpty(noExistVoyageNums)){
             //添加航次编号
             dataSearchDao.batchInsertVoyageNums(noExistVoyageNums);
@@ -177,7 +190,7 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     }
 
     @Override
-    public String queryAndZipData(String[] dataSetSns){
+    public String queryAndZipData(String[] dataSetSns) throws JsonProcessingException {
         // 从数据库查询数据
         List<CtdDataRecord> ctdDataRecordList = ctdDataRecordsDao.queryDataBySns(dataSetSns);
         //记录不存在的数据List
@@ -220,8 +233,7 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         }
         String zipPathFileName = downloadPath + zipFileName;
 
-        String dataStr = JSON.toJSONString(ctdDataRecordList,SerializerFeature.PrettyFormat, SerializerFeature.WriteMapNullValue,
-                SerializerFeature.WriteDateUseDateFormat);
+        String dataStr = new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(ctdDataRecordList);
         //dataStr中的英文替换成中文
         dataStr = englishToChinese(dataStr);
         // 将不存在的文件写入error-log.txt

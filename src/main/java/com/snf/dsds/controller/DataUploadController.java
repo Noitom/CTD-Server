@@ -136,9 +136,6 @@ public class DataUploadController {
             return RespBean.error(e.getMessage());
         }catch (Exception ex){
             log.error("出现系统错误，原因【{}】",ex);
-            if(ex.getCause() instanceof SQLIntegrityConstraintViolationException){
-                return RespBean.error("数据已经导入，请检查或联系管理员！");
-            }
             return RespBean.error("出现系统错误，请联系管理员！");
         }
         return RespBean.ok("上传成功");

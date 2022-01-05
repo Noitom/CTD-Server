@@ -1,6 +1,6 @@
 package com.snf.dsds.common.utils;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snf.dsds.bean.User;
 
 import javax.crypto.Cipher;
@@ -42,7 +42,7 @@ public class AESUtils {
         user.setId(1L);
         user.setUsername("zyj");
         user.setPassword("123");
-        String userJson = JSON.toJSONString(user);
+        String userJson = new ObjectMapper().writeValueAsString(user);
         System.out.println(userJson);
         byte[] data = userJson.getBytes();
         byte[] key = "aaaaaaaaaaaaaaaa".getBytes();

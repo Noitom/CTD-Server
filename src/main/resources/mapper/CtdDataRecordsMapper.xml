@@ -305,4 +305,18 @@
               #{dataSetSn}
           </foreach>
     </select>
+
+    <select id="checkSnExist" resultType="java.lang.String">
+        select data_set_sn from t_ctd_data_records where data_set_sn in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.dataSetSn}
+        </foreach>
+    </select>
+
+    <select id="checkDataFileExist" resultType="java.lang.String">
+        select data_set_sn from t_ctd_data_records where data_file_name in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.dataFileName}
+        </foreach>
+    </select>
 </mapper>
