@@ -10,6 +10,7 @@ import com.snf.dsds.common.utils.ExcelUtils;
 import com.snf.dsds.service.ICtdDataRecordsService;
 import com.snf.dsds.service.IDataSearchService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -24,6 +25,7 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @program: dsds
@@ -46,6 +48,8 @@ public class DataUploadController {
 
     @Value("${ctd.download.path}")
     private String downloadPath;
+
+    static ReentrantLock lock = new ReentrantLock();
 
 
     @PostMapping("/uploadFile")
@@ -77,6 +81,7 @@ public class DataUploadController {
     public RespBean uploadCtdDataFile(String voyageNumber,@RequestParam("file") MultipartFile multipartFile){
         log.info("进入上传数据接口");
         try{
+            lock.lock();
             String fileName = multipartFile.getOriginalFilename();
             //校验指定航次编号对应的数据是否已经上传了该文件，不存在的才支持上传
             if(ctdDataRecordsService.checkFileExist(voyageNumber,fileName)){
@@ -97,6 +102,8 @@ public class DataUploadController {
         }catch (Exception e){
             log.error("上传错误，错误原因【{}】", e);
             return RespBean.error("上传失败,请联系管理员！");
+        }finally {
+            lock.unlock();
         }
         return RespBean.ok("上传成功");
     }
@@ -111,6 +118,7 @@ public class DataUploadController {
         log.info("进入上传excel接口");
         List<List<Object>> dataList ;
         try{
+            lock.lock();
             String path = uploadPath+"excel/";
             File dir = new File(path);
             if(!dir.exists()){
@@ -137,6 +145,8 @@ public class DataUploadController {
         }catch (Exception ex){
             log.error("出现系统错误，原因【{}】",ex);
             return RespBean.error("出现系统错误，请联系管理员！");
+        }finally {
+            lock.unlock();
         }
         return RespBean.ok("上传成功");
     }
@@ -249,14 +259,21 @@ public class DataUploadController {
     public void downloadRecordFile(@RequestBody String[] dataSetSns, HttpServletResponse response) {
         log.info("进入下载ctd数据接口");
         try{
+            lock.lock();
+            log.info("=============》获取到锁，开始执行");
             response.setContentType("application/octet-stream;charset=UTF-8");
             response.setCharacterEncoding("UTF-8");
             String zipfile = ctdDataRecordsService.queryAndZipData(dataSetSns);
             InputStream inputStream = new FileInputStream(new File(downloadPath,zipfile));
             response.setHeader("Content-Disposition","attachment;filename=\"" + zipfile + "\"");
             IOUtils.copy(inputStream,response.getOutputStream());
+            inputStream.close();
+            File download = new File(downloadPath);
+            FileUtils.deleteDirectory(download);
         }catch (Exception e){
             log.error("下载出现错误，原因【{}】",e);
+        }finally {
+            lock.unlock();
         }
     }
 
