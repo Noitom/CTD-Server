@@ -6,7 +6,6 @@ import com.snf.dsds.common.annotation.Decrypt;
 import com.snf.dsds.common.annotation.Encrypt;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**

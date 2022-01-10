@@ -299,6 +299,8 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         for(Map.Entry<String,String> entry:JSON_CONVERSION_MAP.entrySet()){
             resultStr = resultStr.replaceAll(entry.getKey(),entry.getValue());
         }
+        //吧双引号和逗号去掉和冒号两边的空格去掉
+        resultStr = resultStr.replaceAll("\"","").replaceAll(",","").replaceAll(" : ",":");
         return resultStr;
     }
 
