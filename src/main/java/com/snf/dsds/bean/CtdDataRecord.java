@@ -74,6 +74,8 @@ public class CtdDataRecord implements Serializable {
 
     private Boolean dataExist;
 
+    private Integer countNum;
+
     public Boolean getDelFlag() {
         return delFlag;
     }

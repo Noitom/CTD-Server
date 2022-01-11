@@ -34,4 +34,6 @@ public interface ICtdDataRecordsService {
     void deleteCtdDataRecords(String[] dataSetSns);
 
     String queryAndZipData(String[] dataSetSns) throws IOException;
+
+    List<CtdDataRecord> requestHistory();
 }

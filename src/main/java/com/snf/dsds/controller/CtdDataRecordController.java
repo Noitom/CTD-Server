@@ -122,5 +122,10 @@ public class CtdDataRecordController {
         }
     }
 
+    @GetMapping("requestHistory")
+    public RespBean requestHistory(){
+        return RespBean.ok("获取成功",ctdDataRecordsService.requestHistory());
+    }
+
 
 }

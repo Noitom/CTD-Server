@@ -321,4 +321,10 @@
         </foreach>
         and del_flag != 1
     </select>
+
+    <select id="requestHistory" resultType="com.snf.dsds.bean.CtdDataRecord">
+        SELECT t.voyage_number AS 'voyageNumber',MAX(t.finish_time) AS 'finishTime',COUNT(1) AS 'countNum'
+        FROM t_ctd_data_records t GROUP BY t.voyage_number
+        ORDER BY MAX(t.finish_time) DESC LIMIT 12
+    </select>
 </mapper>

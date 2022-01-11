@@ -39,4 +39,6 @@ public interface CtdDataRecordsDao {
 
     List<String> checkDataFileExist(List<CtdDataRecord> list);
 
+    List<CtdDataRecord> requestHistory();
+
 }

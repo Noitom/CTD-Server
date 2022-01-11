@@ -289,6 +289,11 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         return zipFileName;
     }
 
+    @Override
+    public List<CtdDataRecord> requestHistory() {
+        return ctdDataRecordsDao.requestHistory();
+    }
+
     /**
      * 将返回数据的英文转中文,将多余的数据清除
      * @param dataStr
