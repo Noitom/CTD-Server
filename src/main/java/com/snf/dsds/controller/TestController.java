@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-    @Decrypt
-    @Encrypt
     @PostMapping("/test")
     public RespBean test(@RequestBody User user){
         return RespBean.ok("请求成功",user);
