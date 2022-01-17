@@ -72,7 +72,7 @@ public class LogAspect {
         LogBean logBean = new LogBean();
         logBean.setUsername(authentication.getName());
         logBean.setRequestUrl(request.getRequestURL().toString());
-        logBean.setRequestParam(Arrays.toString(jp.getArgs()));
+        logBean.setRequestParam(Arrays.toString(jp.getArgs()).replaceAll("password=[^null].*?,","password=*********,"));
         logDao.addLog(logBean);
     }
 

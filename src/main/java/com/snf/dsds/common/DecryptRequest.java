@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @program: dsds
@@ -41,11 +42,12 @@ public class DecryptRequest extends RequestBodyAdviceAdapter {
     @Override
     public HttpInputMessage beforeBodyRead(final HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
         log.debug("对请求进行解密");
-        byte[] body = new byte[inputMessage.getBody().available()];
-        inputMessage.getBody().read(body);
+        byte[] bodyByte = new byte[inputMessage.getBody().available()];
+        inputMessage.getBody().read(bodyByte);
+        String body = new String(bodyByte);
         try {
-            byte[] decrypt = AESUtils.decrypt(body, encryptProperties.getKey().getBytes());
-            final ByteArrayInputStream bais = new ByteArrayInputStream(decrypt);
+            String decrypt = AESUtils.aesDecrypt(body, encryptProperties.getKey());
+            final ByteArrayInputStream bais = new ByteArrayInputStream(decrypt.getBytes(StandardCharsets.UTF_8));
             return new HttpInputMessage() {
                 @Override
                 public InputStream getBody() throws IOException {

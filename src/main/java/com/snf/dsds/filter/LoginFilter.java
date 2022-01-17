@@ -1,6 +1,8 @@
 package com.snf.dsds.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snf.dsds.common.config.EncryptProperties;
+import com.snf.dsds.common.utils.AESUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import sun.security.krb5.internal.PAData;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -57,6 +61,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             if (password == null) {
                 password = "";
             }
+            password = AESUtils.aesDecrypt(password, EncryptProperties.getKey());
             username = username.trim();
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
             setDetails(request, authRequest);

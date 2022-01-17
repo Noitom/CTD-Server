@@ -2,9 +2,11 @@ package com.snf.dsds.common.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snf.dsds.bean.User;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
@@ -15,38 +17,56 @@ import java.util.Base64;
  **/
 public class AESUtils {
 
-    private static final String AES_ALGORITHM = "AES/ECB/PKCS5Padding";
+    /**
+     * AES解密
+     * @param encryptStr 密文
+     * @param decryptKey 秘钥，必须为16个字符组成
+     * @return 明文
+     * @throws Exception
+     */
+    public static String aesDecrypt(String encryptStr, String decryptKey) throws Exception {
+        if (StringUtils.isEmpty(encryptStr) || StringUtils.isEmpty(decryptKey)) {
+            return null;
+        }
 
-    // 获取 cipher
-    private static Cipher getCipher(byte[] key, int model) throws Exception {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
-        Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
-        cipher.init(model, secretKeySpec);
-        return cipher;
+        byte[] encryptByte = Base64.getDecoder().decode(encryptStr);
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(decryptKey.getBytes(), "AES"));
+        byte[] decryptBytes = cipher.doFinal(encryptByte);
+        return new String(decryptBytes);
     }
 
-    // AES加密
-    public static String encrypt(byte[] data, byte[] key) throws Exception {
-        Cipher cipher = getCipher(key, Cipher.ENCRYPT_MODE);
-        return Base64.getEncoder().encodeToString(cipher.doFinal(data));
+    /**
+     * AES加密
+     * @param content 明文
+     * @param encryptKey 秘钥，必须为16个字符组成
+     * @return 密文
+     * @throws Exception
+     */
+    public static String aesEncrypt(String content, String encryptKey) throws Exception {
+        if (StringUtils.isEmpty(content) || StringUtils.isEmpty(encryptKey)) {
+            return null;
+        }
+
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(encryptKey.getBytes(), "AES"));
+
+        byte[] encryptStr = cipher.doFinal(content.getBytes(StandardCharsets.UTF_8));
+        return Base64.getEncoder().encodeToString(encryptStr);
     }
 
-    // AES解密
-    public static byte[] decrypt(byte[] data, byte[] key) throws Exception {
-        Cipher cipher = getCipher(key, Cipher.DECRYPT_MODE);
-        return cipher.doFinal(Base64.getDecoder().decode(data));
-    }
-
-    public static void main(String[] args) throws Exception {
-        User user =new User();
-        user.setId(1L);
-        user.setUsername("zyj");
-        user.setPassword("123");
-        String userJson = new ObjectMapper().writeValueAsString(user);
-        System.out.println(userJson);
-        byte[] data = userJson.getBytes();
-        byte[] key = "aaaaaaaaaaaaaaaa".getBytes();
-        System.out.println(encrypt(data,key));
+    // 测试加密与解密
+    public static void main(String[] args) {
+        try {
+            String secretKey = "aaaabbbbccccdddd";
+            String content = "hello world";
+            String s1 = aesEncrypt(content, secretKey);
+            System.out.println(s1);
+            String s = aesDecrypt("W2m+AlU298Qv//bk3H+j+g==", secretKey);
+            System.out.println(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

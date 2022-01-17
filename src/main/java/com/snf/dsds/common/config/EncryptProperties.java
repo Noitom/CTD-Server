@@ -10,10 +10,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  **/
 @ConfigurationProperties(prefix = "spring.encrypt")
 public class EncryptProperties {
-    private final static String DEFAULT_KEY = "aaaaaaaaaaaaaaaa";
-    private String key = DEFAULT_KEY;
+    private final static String DEFAULT_KEY = "aaaabbbbccccdddd";
+    private static String key = DEFAULT_KEY;
 
-    public String getKey() {
+    public static String getKey() {
         return key;
     }
 
