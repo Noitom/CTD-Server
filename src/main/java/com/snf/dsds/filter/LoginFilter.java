@@ -61,7 +61,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             if (password == null) {
                 password = "";
             }
-            password = AESUtils.aesDecrypt(password, EncryptProperties.getKey());
+//            password = AESUtils.aesDecrypt(password, EncryptProperties.getKey());
             username = username.trim();
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
             setDetails(request, authRequest);

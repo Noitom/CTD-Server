@@ -52,7 +52,7 @@ public class DataUploadController {
 
 
     @PostMapping("/uploadFile")
-    public RespBean uploadFile(String voyageNumber,@RequestParam("file") MultipartFile multipartFile){
+    public RespBean uploadFile(@RequestParam("file") MultipartFile multipartFile){
         log.info("进入上传数据接口");
         try{
             String fileName = multipartFile.getOriginalFilename();
