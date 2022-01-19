@@ -174,7 +174,7 @@ public class DataUploadController {
             ctdDataRecord.setShipName((String) rowList.get(ParsExcelEnum.SHIP_NAME.ordinal()));
             Long platformType = searchParamTypeMap.get((String) rowList.get(ParsExcelEnum.PLATFORM_TYPE.ordinal()));
             if (platformType == null){
-                errRowColMap.put(i+1,"平台类型");
+                errRowColMap.put(i+1,StringUtils.isEmpty(errRowColMap.get(i+1))?"平台类型":errRowColMap.get(i+1)+"，平台类型");
             }else{
                 ctdDataRecord.setPlatformType(platformType);
             }
@@ -204,7 +204,7 @@ public class DataUploadController {
             }
             Long dveType = searchParamTypeMap.get((String) rowList.get(ParsExcelEnum.DEV_TYPE.ordinal()));
             if (dveType == null){
-                errRowColMap.put(i+1,"设备类型");
+                errRowColMap.put(i+1,StringUtils.isEmpty(errRowColMap.get(i+1))?"设备类型":errRowColMap.get(i+1)+"，设备类型");
             }else{
                 ctdDataRecord.setDevType(dveType);
             }
