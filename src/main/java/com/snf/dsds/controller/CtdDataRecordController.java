@@ -1,6 +1,7 @@
 package com.snf.dsds.controller;
 
 import com.snf.dsds.bean.CtdDataRecord;
+import com.snf.dsds.bean.CtdDetail;
 import com.snf.dsds.bean.RespBean;
 import com.snf.dsds.bean.SearchParameter;
 import com.snf.dsds.common.Exception.CtdException;
@@ -10,6 +11,7 @@ import com.snf.dsds.service.IDataSearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -125,6 +127,15 @@ public class CtdDataRecordController {
     @GetMapping("requestHistory")
     public RespBean requestHistory(){
         return RespBean.ok("获取成功",ctdDataRecordsService.requestHistory());
+    }
+
+    @PostMapping("/requestCtdDetails")
+    public RespBean requestCtdDetails(@RequestBody CtdDetail ctdDetail){
+        List<CtdDetail> ctdDetails = ctdDataRecordsService.getCtdDetails(ctdDetail.getFileName());
+        if(CollectionUtils.isEmpty(ctdDetails)){
+            return RespBean.error("查询结果为空！");
+        }
+        return RespBean.ok("查询成功",ctdDetails);
     }
 
 

@@ -212,6 +212,9 @@
             <if test="dataFileName !=null and dataFileName != '' ">
                 data_file_name=#{dataFileName},
             </if>
+            <if test="dataExist != null" >
+                data_exist=#{dataExist}
+            </if>
             <if test="delFlag !=null">
                 del_flag=#{delFlag},
             </if>
@@ -299,6 +302,7 @@
             t.data_status AS 'dataStatus',
             t.data_file_name AS 'dataFileName',
             t.dev_type AS 'devType' ,
+            t.data_exist AS 'dataExist',
             t.del_flag AS 'delFlag'
          from t_ctd_data_records t where del_flag = 0 and data_set_sn in
           <foreach collection="dataSetSns" separator="," open="(" close=")" item="dataSetSn">

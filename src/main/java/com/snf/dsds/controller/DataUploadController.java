@@ -1,6 +1,7 @@
 package com.snf.dsds.controller;
 
 import com.snf.dsds.bean.CtdDataRecord;
+import com.snf.dsds.bean.CtdDetail;
 import com.snf.dsds.bean.RespBean;
 import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.common.projectEnum.ParsExcelEnum;
@@ -51,25 +52,6 @@ public class DataUploadController {
     static ReentrantLock lock = new ReentrantLock();
 
 
-    @PostMapping("/uploadFile")
-    public RespBean uploadFile(@RequestParam("file") MultipartFile multipartFile){
-        log.info("进入上传数据接口");
-        try{
-            String fileName = multipartFile.getOriginalFilename();
-            String path =  uploadPath + "/test/";
-            File dir = new File(path);
-            if(!dir.exists()){
-                dir.mkdir();
-            }
-            File file = new File(path,fileName);
-            multipartFile.transferTo(file);
-        }catch (Exception e){
-            log.error("上传错误，错误原因【{}】",e);
-            return RespBean.error("上传失败");
-        }
-        return RespBean.ok("上传成功");
-    }
-
     /**
      * 上传ctd数据文件
      * @param voyageNumber
@@ -93,8 +75,25 @@ public class DataUploadController {
             }
             File file = new File(path,fileName);
             multipartFile.transferTo(file);
+            //todo 将ctd数据解析并保存到数据库
+            FileInputStream inputStream = new FileInputStream(file);
+            StringBuilder stringBuilder = new StringBuilder();
+            byte[] buffer = new byte[1024];
+            int m = 0;
+            while ((m = inputStream.read(buffer)) != -1){
+                stringBuilder.append(new String(buffer,0,m));
+            }
+            inputStream.close();
+            String[] strArr = StringUtils.split(stringBuilder.toString(),"\r\n");
+            List<CtdDetail> ctdDetails = new ArrayList<>();
+            for(String s: strArr){
+                String[] arr = s.split("\t");
+                CtdDetail ctdDetail = new CtdDetail(fileName,Double.parseDouble(arr[0])
+                        ,Double.parseDouble(arr[0]),Double.parseDouble(arr[0]));
+                ctdDetails.add(ctdDetail);
+            }
             // 更新数据库状态
-            ctdDataRecordsService.setDataExist(fileName,true);
+            ctdDataRecordsService.saveCtdDetail(ctdDetails,fileName,true);
         }catch (CtdException e){
             log.error("上传出现错误，原因【{}】",e.getMessage());
             return RespBean.error(e.getMessage());

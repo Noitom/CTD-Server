@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.snf.dsds.bean.CtdDataRecord;
+import com.snf.dsds.bean.CtdDetail;
 import com.snf.dsds.bean.SearchParameter;
 import com.snf.dsds.common.Exception.CtdException;
 import com.snf.dsds.common.projectEnum.SearchTypeEnum;
 import com.snf.dsds.common.utils.ZipUtils;
 import com.snf.dsds.dao.CtdDataRecordsDao;
+import com.snf.dsds.dao.CtdDetailDao;
 import com.snf.dsds.dao.DataSearchDao;
 import com.snf.dsds.service.ICtdDataRecordsService;
 import com.snf.dsds.service.IDataSearchService;
@@ -93,6 +95,9 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     @Autowired
     IDataSearchService dataSearchService;
 
+    @Autowired
+    CtdDetailDao ctdDetailDao;
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void addExcelData(List<CtdDataRecord> list,List<String> noExistVoyageNums) throws SQLIntegrityConstraintViolationException, JsonProcessingException {
@@ -142,12 +147,22 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         return ctdDataRecordList;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateCtdDataRecord(CtdDataRecord ctdDataRecord) {
         // 判断文件名是否修改，修改的话吧数据文件标志设置为0
         CtdDataRecord oleData = ctdDataRecordsDao.ctdDataExist(ctdDataRecord.getDataSetSn());
         if(!StringUtils.equals(oleData.getDataFileName(),ctdDataRecord.getDataFileName())){
             ctdDataRecord.setDataExist(false);
+            //把文件和数据删除
+            String fileName = oleData.getDataFileName();
+            ctdDetailDao.deleteData(fileName);
+            String path = uploadPath + ctdDataRecord.getVoyageNumber();
+            File file = new File(path,fileName);
+            if(file.exists()){
+                file.delete();
+            }
+
         }
         if(ctdDataRecordsDao.updateCtdDataRecord(ctdDataRecord)!=1){
             throw new CtdException("该数据不存在，不能修改！");
@@ -164,7 +179,9 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     }
 
     @Override
-    public void setDataExist(String fileName,Boolean exist) {
+    @Transactional(rollbackFor = Exception.class)
+    public void saveCtdDetail(List<CtdDetail> ctdDetails,String fileName, Boolean exist) {
+        ctdDetailDao.batchInsert(ctdDetails);
         ctdDataRecordsDao.updateExist(fileName,exist);
     }
 
@@ -185,6 +202,14 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         }
         //先删除数据，在删除文件
         ctdDataRecordsDao.deletes(dataSetSns);
+        //删除ctdDetail数据
+        List<String> fileNames = new ArrayList<>();
+        for(CtdDataRecord dataRecord:ctdDataRecordList){
+            if (dataRecord.getDataExist()){
+                fileNames.add(dataRecord.getDataFileName());
+            }
+        }
+        ctdDetailDao.deleteDatas(fileNames);
         //删除所有的文件
         String filepath;
         String filename;
@@ -307,6 +332,10 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         //吧双引号和逗号去掉和冒号两边的空格去掉
         resultStr = resultStr.replaceAll("\"","").replaceAll(",","").replaceAll(" : ",":");
         return resultStr;
+    }
+
+    public List<CtdDetail> getCtdDetails(String fileName){
+        return ctdDetailDao.queryCtdDetails(fileName);
     }
 
 

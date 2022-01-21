@@ -2,6 +2,7 @@ package com.snf.dsds.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.snf.dsds.bean.CtdDataRecord;
+import com.snf.dsds.bean.CtdDetail;
 import com.snf.dsds.bean.SearchParameter;
 
 import java.io.FileNotFoundException;
@@ -27,7 +28,7 @@ public interface ICtdDataRecordsService {
      */
     boolean checkFileExist(String voyageNumber,String fileName);
 
-    void setDataExist(String fileName,Boolean exist);
+    void saveCtdDetail(List<CtdDetail> ctdDetails, String fileName, Boolean exist);
 
     void deleteCtdDataRecord(String dataSetSn);
 
@@ -36,4 +37,6 @@ public interface ICtdDataRecordsService {
     String queryAndZipData(String[] dataSetSns) throws IOException;
 
     List<CtdDataRecord> requestHistory();
+
+    List<CtdDetail> getCtdDetails(String fileName);
 }
