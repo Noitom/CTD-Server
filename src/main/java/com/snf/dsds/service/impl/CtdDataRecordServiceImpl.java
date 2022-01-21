@@ -345,6 +345,9 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
 
     public List<CtdDetail> getCtdDetails(String fileName){
         List<CtdDetail> ctdDetails = ctdDetailDao.queryCtdDetails(fileName);
+        if(CollectionUtils.isEmpty(ctdDetails)){
+            throw new CtdException("没有查到相应数据");
+        }
         ctdDetails.remove(0);
         return ctdDetails;
     }
