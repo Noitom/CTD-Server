@@ -344,7 +344,9 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     }
 
     public List<CtdDetail> getCtdDetails(String fileName){
-        return ctdDetailDao.queryCtdDetails(fileName);
+        List<CtdDetail> ctdDetails = ctdDetailDao.queryCtdDetails(fileName);
+        ctdDetails.remove(0);
+        return ctdDetails;
     }
 
 
