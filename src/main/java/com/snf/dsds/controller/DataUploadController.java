@@ -61,6 +61,7 @@ public class DataUploadController {
     @PostMapping("/uploadCtdDataFiles")
     public RespBean uploadCtdDataFile(String voyageNumber,@RequestParam("file") MultipartFile multipartFile){
         log.info("进入上传数据接口");
+        Long start = System.currentTimeMillis();
         try{
             lock.lock();
             String fileName = multipartFile.getOriginalFilename();
@@ -75,7 +76,7 @@ public class DataUploadController {
             }
             File file = new File(path,fileName);
             multipartFile.transferTo(file);
-            //todo 将ctd数据解析并保存到数据库
+            // 将ctd数据解析并保存到数据库
             FileInputStream inputStream = new FileInputStream(file);
             StringBuilder stringBuilder = new StringBuilder();
             byte[] buffer = new byte[1024];
@@ -89,7 +90,7 @@ public class DataUploadController {
             for(String s: strArr){
                 String[] arr = s.split("\t");
                 CtdDetail ctdDetail = new CtdDetail(fileName,Double.parseDouble(arr[0])
-                        ,Double.parseDouble(arr[0]),Double.parseDouble(arr[0]));
+                        ,Double.parseDouble(arr[1]),Double.parseDouble(arr[2]));
                 ctdDetails.add(ctdDetail);
             }
             // 更新数据库状态
@@ -103,6 +104,7 @@ public class DataUploadController {
         }finally {
             lock.unlock();
         }
+        log.info("执行耗时【{}毫秒】",System.currentTimeMillis()-start);
         return RespBean.ok("上传成功");
     }
 

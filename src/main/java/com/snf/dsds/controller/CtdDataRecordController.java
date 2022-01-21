@@ -131,10 +131,12 @@ public class CtdDataRecordController {
 
     @PostMapping("/requestCtdDetails")
     public RespBean requestCtdDetails(@RequestBody CtdDetail ctdDetail){
+        Long start = System.currentTimeMillis();
         List<CtdDetail> ctdDetails = ctdDataRecordsService.getCtdDetails(ctdDetail.getFileName());
         if(CollectionUtils.isEmpty(ctdDetails)){
             return RespBean.error("查询结果为空！");
         }
+        log.info("查询耗时【{}毫秒】",System.currentTimeMillis()-start);
         return RespBean.ok("查询成功",ctdDetails);
     }
 

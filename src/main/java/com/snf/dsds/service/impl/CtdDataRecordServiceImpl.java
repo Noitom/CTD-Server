@@ -27,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.*;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @program: dsds
@@ -181,7 +182,15 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveCtdDetail(List<CtdDetail> ctdDetails,String fileName, Boolean exist) {
-        ctdDetailDao.batchInsert(ctdDetails);
+        List<CtdDetail> ctdDetailList = new ArrayList<>();
+        for(int i=0;i<ctdDetails.size();i++){
+            ctdDetailList.add(ctdDetails.get(i));
+            if ((i != 0 && i % 10000 == 0) || i == ctdDetails.size()-1){
+                ctdDetailDao.batchInsert(ctdDetailList);
+                ctdDetailList.clear();
+            }
+        }
+//        ctdDetailDao.batchInsert(ctdDetails);
         ctdDataRecordsDao.updateExist(fileName,exist);
     }
 

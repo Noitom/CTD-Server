@@ -27,6 +27,7 @@
     </delete>
 
     <select id="queryCtdDetails" resultType="com.snf.dsds.bean.CtdDetail">
-        select t.file_name as 'fileName',t.temperature,t.salinity,t.depth from t_ctd_detail t where t.file_name = #{fileName}
+        select t.file_name as 'fileName',t.temperature,t.salinity,t.depth
+        from t_ctd_detail t where t.file_name = #{fileName}  and t.depth > 1 GROUP BY floor(t.depth)
     </select>
 </mapper>
