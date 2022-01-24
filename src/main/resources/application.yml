@@ -14,5 +14,4 @@ spring:
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: com.snf.dsds.dao
-server:
-  port: 8081
+

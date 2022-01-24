@@ -19,3 +19,5 @@ ctd:
 logging:
   level:
     com.snf.dsds: debug
+server:
+  port: 8080

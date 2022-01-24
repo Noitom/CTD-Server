@@ -6,7 +6,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     username: root
-    password: chen123456
+    password: 123456789
     url: jdbc:mysql://127.0.0.1:3306/ctd?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
 ctd:
   upload:
