@@ -3,6 +3,11 @@ spring:
     multipart:
       max-file-size: 30MB
       max-request-size: 30MB
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: 123456789
+    url: jdbc:mysql://192.168.1.103:3306/ctd?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
