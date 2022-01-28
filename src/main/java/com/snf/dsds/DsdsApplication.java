@@ -6,10 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @MapperScan("com.snf.dsds.dao")
 @SpringBootApplication
 @ServletComponentScan
+@EnableTransactionManagement
 public class DsdsApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
