@@ -81,11 +81,6 @@ public class DataUploadController {
             InputStreamReader read = new InputStreamReader (inputStream,"UTF-8");
             BufferedReader reader=new BufferedReader(read);
             StringBuilder stringBuilder = new StringBuilder();
-//            byte[] buffer = new byte[1024];
-//            int m = 0;
-//            while ((m = inputStream.read(buffer)) != -1){
-//                stringBuilder.append(new String(buffer,0,m));
-//            }
             String line;
             while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line).append("\r\n");
@@ -93,7 +88,7 @@ public class DataUploadController {
             inputStream.close();
             String[] strArr = StringUtils.split(stringBuilder.toString(),"\r\n");
             List<CtdDetail> ctdDetails = new ArrayList<>();
-            //todo 相同深度的数据只存一条
+            // 相同深度的数据只存一条
             List<String> deptList = new ArrayList<>();
             for(int i=1;i<strArr.length;i++){
                 String[] arr = strArr[i].split("，");
