@@ -180,7 +180,6 @@ public class DataUploadController {
                 ctdDataRecord.setPlatformType(platformType);
             }
             ctdDataRecord.setPlatformName((String)rowList.get(ParsExcelEnum.PLATFORM_NAME.ordinal()));
-            ctdDataRecord.setStationNum((String)rowList.get(ParsExcelEnum.STATION_NUM.ordinal()));
             try{
                 Long startTime = HSSFDateUtil.getJavaDate(Double.parseDouble((String)rowList.get(ParsExcelEnum.START_TIME.ordinal()))).getTime();
                 ctdDataRecord.setStartTime(startTime/1000);
@@ -196,9 +195,6 @@ public class DataUploadController {
                 ctdDataRecord.setLongitudeLayout(conversion((String)rowList.get(ParsExcelEnum.LONGITUDE_LAYOUT.ordinal()),1));
                 ctdDataRecord.setLatitudeLayout(conversion((String)rowList.get(ParsExcelEnum.LATITUDE_LAYOUT.ordinal()),2));
                 ctdDataRecord.setDepthLayout(conversion((String)rowList.get(ParsExcelEnum.DEPTH_LAYOUT.ordinal()),3));
-                ctdDataRecord.setLongitudeWork(conversion((String)rowList.get(ParsExcelEnum.LONGITUDE_WORK.ordinal()),1));
-                ctdDataRecord.setLatitudeWork(conversion((String)rowList.get(ParsExcelEnum.LATITUDE_WORK.ordinal()),2));
-                ctdDataRecord.setDepthWork(conversion((String)rowList.get(ParsExcelEnum.DEPTH_WORK.ordinal()),3));
             }catch (Exception e){
                 log.error("经纬度校验有错误，错误原因【{}】",e);
                 errRowColMap.put(i+1,StringUtils.isEmpty(errRowColMap.get(i+1))?"经纬度数据":errRowColMap.get(i+1)+"，经纬度数据");

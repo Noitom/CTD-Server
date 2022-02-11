@@ -70,7 +70,7 @@ public class ExcelUtils {
                         rowList.add(data);
                     }
                 }
-                if(!CollectionUtils.isEmpty(errColList) && errColList.size() != 21){//记录空行
+                if(!CollectionUtils.isEmpty(errColList) && errColList.size() != 17){//记录空行
                     errRolMap.put(i+1,errColList);
                 }
                 if(CollectionUtils.isEmpty(rowList)){
