@@ -78,19 +78,31 @@ public class DataUploadController {
             multipartFile.transferTo(file);
             // 将ctd数据解析并保存到数据库
             FileInputStream inputStream = new FileInputStream(file);
+            InputStreamReader read = new InputStreamReader (inputStream,"UTF-8");
+            BufferedReader reader=new BufferedReader(read);
             StringBuilder stringBuilder = new StringBuilder();
-            byte[] buffer = new byte[1024];
-            int m = 0;
-            while ((m = inputStream.read(buffer)) != -1){
-                stringBuilder.append(new String(buffer,0,m));
+//            byte[] buffer = new byte[1024];
+//            int m = 0;
+//            while ((m = inputStream.read(buffer)) != -1){
+//                stringBuilder.append(new String(buffer,0,m));
+//            }
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append("\r\n");
             }
             inputStream.close();
             String[] strArr = StringUtils.split(stringBuilder.toString(),"\r\n");
             List<CtdDetail> ctdDetails = new ArrayList<>();
-            for(String s: strArr){
-                String[] arr = s.split("\t");
-                CtdDetail ctdDetail = new CtdDetail(fileName,Double.parseDouble(arr[0])
-                        ,Double.parseDouble(arr[1]),Double.parseDouble(arr[2]));
+            //todo 相同深度的数据只存一条
+            List<String> deptList = new ArrayList<>();
+            for(int i=1;i<strArr.length;i++){
+                String[] arr = strArr[i].split("，");
+                if(deptList.contains(arr[2])){
+                    continue;
+                }
+                deptList.add(arr[2]);
+                CtdDetail ctdDetail = new CtdDetail(fileName,Double.parseDouble(arr[1])
+                        ,Double.parseDouble(arr[4]),Double.parseDouble(arr[2]));
                 ctdDetails.add(ctdDetail);
             }
             // 更新数据库状态
@@ -168,7 +180,7 @@ public class DataUploadController {
             CtdDataRecord ctdDataRecord = new CtdDataRecord();
             // 校验航次编号是否存在
             String voyageNumber = (String) rowList.get(ParsExcelEnum.VOYAGE_NUMBER.ordinal());
-            if (! searchParamTypeMap.containsKey(voyageNumber) ){
+            if (! searchParamTypeMap.containsKey(voyageNumber) && !noExistVoyageNums.contains(voyageNumber)){
                 noExistVoyageNums.add(voyageNumber);
             }
             ctdDataRecord.setVoyageNumber(voyageNumber);
