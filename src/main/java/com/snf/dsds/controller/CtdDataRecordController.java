@@ -65,6 +65,8 @@ public class CtdDataRecordController {
      */
     @PostMapping("requestCtdRecords")
     public RespBean requestCtdRecords(@RequestBody SearchParameter searchParameter){
+        log.info("进入查询ctd数据接口");
+        Long start = System.currentTimeMillis();
         try{
             List<CtdDataRecord> ctdDataRecords = ctdDataRecordsService.queryListByParam(searchParameter);
             Map<Long,String> searchParamTypeMap = dataSearchService.getIdStrMap(SearchTypeEnum.SEARCH_TYPE_DEVTYPE.getValue(),
@@ -80,6 +82,8 @@ public class CtdDataRecordController {
         }catch (Exception e){
             log.error("查询ctd数据出现错误，原因【{}】",e);
             return RespBean.error("查询出现错误，请联系管理员！");
+        }finally {
+            log.info("查询ctd数据接口执行耗时【{}】",System.currentTimeMillis()-start);
         }
     }
 

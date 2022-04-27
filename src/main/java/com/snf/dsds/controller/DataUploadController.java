@@ -63,7 +63,7 @@ public class DataUploadController {
         log.info("进入上传数据接口");
         Long start = System.currentTimeMillis();
         try{
-            lock.lock();
+//            lock.lock();
             String fileName = multipartFile.getOriginalFilename();
             //校验指定航次编号对应的数据是否已经上传了该文件，不存在的才支持上传
             if(ctdDataRecordsService.checkFileExist(voyageNumber,fileName)){
@@ -109,9 +109,9 @@ public class DataUploadController {
             log.error("上传错误，错误原因【{}】", e);
             return RespBean.error("上传失败,请联系管理员！");
         }finally {
-            lock.unlock();
+//            lock.unlock();
+            log.info("上传数据接口执行耗时【{}毫秒】",System.currentTimeMillis()-start);
         }
-        log.info("执行耗时【{}毫秒】",System.currentTimeMillis()-start);
         return RespBean.ok("上传成功");
     }
 
