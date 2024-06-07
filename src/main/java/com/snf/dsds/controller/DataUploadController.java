@@ -92,6 +92,7 @@ public class DataUploadController {
             List<String> deptList = new ArrayList<>();
             for(int i=1;i<strArr.length;i++){
                 String[] arr = strArr[i].split("，");
+                if (arr.length < 5) continue;
                 if(deptList.contains(arr[2])){
                     continue;
                 }
