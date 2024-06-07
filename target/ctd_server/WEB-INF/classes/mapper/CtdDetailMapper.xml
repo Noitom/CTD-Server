@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.snf.dsds.dao.CtdDetailDao">
+
+    <insert id="batchInsert" >
+        INSERT INTO t_ctd_detail(file_name,temperature,salinity,depth)
+        VALUES
+           <foreach collection="ctdDetailList" item="item" separator=",">
+               (
+                #{item.fileName},
+                #{item.temperature},
+                #{item.salinity},
+                #{item.depth}
+                )
+           </foreach>
+    </insert>
+
+    <delete id="deleteData">
+        delete from t_ctd_detail where file_name = #{fileName}
+    </delete>
+
+    <delete id="deleteDatas" >
+        delete from t_ctd_detail where file_name in
+            <foreach collection="fileNames" item="fileName" separator="," open="(" close=")">
+                 #{fileName}
+            </foreach>
+    </delete>
+
+    <select id="queryCtdDetails" resultType="com.snf.dsds.bean.CtdDetail">
+        select t.temperature,t.salinity,t.depth
+        from t_ctd_detail t where t.file_name = #{fileName} GROUP BY floor(t.depth) ORDER BY t.depth
+    </select>
+</mapper>

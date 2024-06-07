@@ -209,6 +209,7 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
         if(CollectionUtils.isEmpty(ctdDataRecordList)){
             throw new CtdException("数据不存在，不能删除！");
         }
+
         //先删除数据，在删除文件
         ctdDataRecordsDao.deletes(dataSetSns);
         //删除ctdDetail数据
@@ -218,7 +219,11 @@ public class CtdDataRecordServiceImpl implements ICtdDataRecordsService {
                 fileNames.add(dataRecord.getDataFileName());
             }
         }
-        ctdDetailDao.deleteDatas(fileNames);
+
+        if (fileNames.size() > 0) {
+            ctdDetailDao.deleteDatas(fileNames);
+        }
+
         //删除所有的文件
         String filepath;
         String filename;

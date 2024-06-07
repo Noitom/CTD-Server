@@ -1,0 +1,11 @@
+{
+  "groups": [
+    {
+      "name": "spring.encrypt",
+      "type": "com.snf.dsds.common.config.EncryptProperties",
+      "sourceType": "com.snf.dsds.common.config.EncryptProperties"
+    }
+  ],
+  "properties": [],
+  "hints": []
+}
