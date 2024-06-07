@@ -193,7 +193,7 @@ public class DataUploadController {
                 Long finishTime = HSSFDateUtil.getJavaDate(Double.parseDouble((String)rowList.get(ParsExcelEnum.FINISH_TIME.ordinal()))).getTime();
                 ctdDataRecord.setFinishTime(finishTime/1000);
             }catch (Exception e){
-                log.error("获取上传数据中的时间戳出现错误，错误原因 A【{}】", e.getMessage());
+                log.error("获取上传数据中的时间戳出现错误，错误原因【{}】", e.getMessage());
                 errRowColMap.put(i+1,StringUtils.isEmpty(errRowColMap.get(i+1))?"开始时间或结束时间":errRowColMap.get(i+1)+"，开始时间或结束时间");
             }
             ctdDataRecord.setDiveNum((String)rowList.get(ParsExcelEnum.DIVE_NUM.ordinal()));
