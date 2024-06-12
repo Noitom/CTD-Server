@@ -97,7 +97,8 @@ public class DataUploadController {
                     continue;
                 }
                 deptList.add(arr[2]);
-                CtdDetail ctdDetail = new CtdDetail(fileName,Double.parseDouble(arr[1])
+                Integer id = i;
+                CtdDetail ctdDetail = new CtdDetail(id, fileName,Double.parseDouble(arr[1])
                         ,Double.parseDouble(arr[4]),Double.parseDouble(arr[2]), Double.parseDouble(arr[3]));
                 ctdDetails.add(ctdDetail);
             }

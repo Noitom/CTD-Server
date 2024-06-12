@@ -3,10 +3,11 @@
 <mapper namespace="com.snf.dsds.dao.CtdDetailDao">
 
     <insert id="batchInsert" >
-        INSERT INTO t_ctd_detail(file_name,temperature,salinity,depth, soundSpeed)
+        INSERT INTO t_ctd_detail(id,file_name,temperature,salinity,depth, soundSpeed)
         VALUES
            <foreach collection="ctdDetailList" item="item" separator=",">
                (
+                #{item.id},
                 #{item.fileName},
                 #{item.temperature},
                 #{item.salinity},
@@ -29,6 +30,6 @@
 
     <select id="queryCtdDetails" resultType="com.snf.dsds.bean.CtdDetail">
         select t.temperature,t.salinity,t.depth,t.soundSpeed
-        from t_ctd_detail t where t.file_name = #{fileName} GROUP BY floor(t.depth) ORDER BY t.depth
+        from t_ctd_detail t where t.file_name = #{fileName} GROUP BY floor(t.depth) ORDER BY t.id
     </select>
 </mapper>

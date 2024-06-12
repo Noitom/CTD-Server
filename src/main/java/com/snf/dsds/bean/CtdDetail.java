@@ -11,16 +11,18 @@ import lombok.Data;
 @Data
 public class CtdDetail {
 
-    private String fileName;
-    private Double temperature;
-    private Double salinity;
-    private Double depth;
-    private Double soundSpeed;
+    private Integer id;
+    private String  fileName;
+    private Double  temperature;
+    private Double  salinity;
+    private Double  depth;
+    private Double  soundSpeed;
 
     public CtdDetail() {
     }
 
-    public CtdDetail(String fileName, Double temperature, Double salinity, Double depth, Double soundSpeed) {
+    public CtdDetail(Integer id, String fileName, Double temperature, Double salinity, Double depth, Double soundSpeed) {
+        this.id = id;
         this.fileName = fileName;
         this.temperature = temperature;
         this.salinity = salinity;
