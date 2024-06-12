@@ -15,14 +15,16 @@ public class CtdDetail {
     private Double temperature;
     private Double salinity;
     private Double depth;
+    private Double soundSpeed;
 
     public CtdDetail() {
     }
 
-    public CtdDetail(String fileName, Double temperature, Double salinity, Double depth) {
+    public CtdDetail(String fileName, Double temperature, Double salinity, Double depth, Double soundSpeed) {
         this.fileName = fileName;
         this.temperature = temperature;
         this.salinity = salinity;
         this.depth = depth;
+        this.soundSpeed = soundSpeed;
     }
 }
